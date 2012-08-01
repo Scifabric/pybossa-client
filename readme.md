@@ -10,7 +10,7 @@ Setup:
 import pbclient
 
 # setup the server connection
-pbclient.set('api_url', 'http://pybossa.com')
+pbclient.set('endpoint', 'http://pybossa.com')
 pbclient.set('api_key', '--your-api-key-here--')
 ```
 

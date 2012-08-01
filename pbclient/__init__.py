@@ -18,12 +18,13 @@ def _pybossa_req(method, domain, id=None, payload=None, params=None):
     Sends a JSON request
     """
     headers = {'content-type': 'application/json'}
-    url = _opts['api_url'] + '/api/' + domain
+    url = _opts['endpoint'] + '/api/' + domain
     if id is not None:
         url += '/' + str(id)
     if params is None:
         params = dict()
-    params['api_key'] = _opts['api_key']
+    if 'api_key' in _opts:
+        params['api_key'] = _opts['api_key']
     if method == 'get':
         r = requests.get(url, params=params)
     elif method == 'post':
