@@ -92,7 +92,7 @@ def update_app(app):
 
 
 def delete_app(app_id):
-    pass
+    _pybossa_req('delete', 'app', app_id)
 
 
 def get_tasks(app_id, limit=100):
