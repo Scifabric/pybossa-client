@@ -75,6 +75,13 @@ class Task(DomainObject):
         return 'pybossa.Task("' + self.id + '")'
 
 
+class TaskRun(DomainObject):
+    def __repr__(self):
+        return 'pybossa.TaskRun("' + self.id + '")'
+
+
+# Apps
+
 def get_apps():
     return [App(app_data) for app_data in _pybossa_req('get', 'app')]
 
@@ -94,6 +101,8 @@ def update_app(app):
 def delete_app(app_id):
     _pybossa_req('delete', 'app', app_id)
 
+
+# Tasks
 
 def get_tasks(app_id, limit=100):
     return [Task(task_data) for task_data in _pybossa_req('get', 'task', params=dict(app_id=app_id, limit=limit))]
@@ -118,3 +127,14 @@ def delete_task(task):
     if status >= 300:
         status = 'status: %d' % status
         print 'could not delete task', task.id, '(%s)' % status
+
+
+# Task Runs
+
+def get_taskruns(app_id, limit=100):
+    return [TaskRun(task_data) for task_data in _pybossa_req('get', 'taskrun', params=dict(app_id=app_id, limit=limit))]
+
+
+def find_taskruns(app_id, **kwargs):
+    kwargs['app_id'] = app_id
+    return [TaskRun(task_data) for task_data in _pybossa_req('get', 'task', params=kwargs)]
