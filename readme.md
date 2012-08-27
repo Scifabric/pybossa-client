@@ -2,6 +2,14 @@
 
 Makes it easy to work with [PyBossa](http://pybossa.com).
 
+## Install
+
+You can install pybossa-client using **pip**, preferably while working in a [virtualenv](http://www.virtualenv.org/en/latest/index.html):
+
+```bash
+pip install https://github.com/PyBossa/pybossa-client/zipball/master 
+```
+
 ### Usage:
 
 Setup:
