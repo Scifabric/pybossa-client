@@ -10,7 +10,7 @@ You can install pybossa-client using **pip**, preferably while working in a [vir
 pip install https://github.com/PyBossa/pybossa-client/zipball/master 
 ```
 
-### Usage:
+## Usage:
 
 Setup:
 
