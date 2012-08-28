@@ -33,11 +33,14 @@ def _pybossa_req(method, domain, id=None, payload=None, params=None):
         r = requests.put(url, params=params, headers=headers, data=json.dumps(payload))
     elif method == 'delete':
         r = requests.delete(url, params=params, headers=headers, data=json.dumps(payload))
-    if r.text:
-        result = json.loads(r.text)
+    print r.status_code, r.status_code / 100
+    if r.status_code / 100 == 2:
+        if r.text:
+            return json.loads(r.text)
+        else:
+            return True
     else:
-        result = r.status_code
-    return result
+        return r.status_code
 
 
 # app
@@ -95,11 +98,11 @@ def find_app(**kwargs):
 
 
 def update_app(app):
-    _pybossa_req('put', 'app', app.id, payload=app.data)
+    return _pybossa_req('put', 'app', app.id, payload=app.data)
 
 
 def delete_app(app_id):
-    _pybossa_req('delete', 'app', app_id)
+    return _pybossa_req('delete', 'app', app_id)
 
 
 # Tasks
@@ -115,11 +118,11 @@ def find_tasks(app_id, **kwargs):
 
 def create_task(app_id, info):
     task = dict(app_id=app_id, state=0, calibration=0, priority_0=0, info=info)
-    _pybossa_req('post', 'task', payload=task)
+    return _pybossa_req('post', 'task', payload=task)
 
 
 def update_task(task):
-    _pybossa_req('put', 'task', task.id, payload=task.data)
+    return _pybossa_req('put', 'task', task.id, payload=task.data)
 
 
 def delete_task(task):
