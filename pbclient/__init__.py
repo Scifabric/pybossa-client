@@ -33,7 +33,7 @@ def _pybossa_req(method, domain, id=None, payload=None, params=None):
         r = requests.put(url, params=params, headers=headers, data=json.dumps(payload))
     elif method == 'delete':
         r = requests.delete(url, params=params, headers=headers, data=json.dumps(payload))
-    print r.status_code, r.status_code / 100
+    # print r.status_code, r.status_code / 100
     if r.status_code / 100 == 2:
         if r.text:
             return json.loads(r.text)
@@ -75,12 +75,12 @@ class App(DomainObject):
 
 class Task(DomainObject):
     def __repr__(self):
-        return 'pybossa.Task("' + self.id + '")'
+        return 'pybossa.Task("' + str(self.id) + '")'
 
 
 class TaskRun(DomainObject):
     def __repr__(self):
-        return 'pybossa.TaskRun("' + self.id + '")'
+        return 'pybossa.TaskRun("' + str(self.id) + '")'
 
 
 # Apps
