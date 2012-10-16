@@ -93,14 +93,20 @@ class TaskRun(DomainObject):
 
 # Apps
 
-def get_apps():
+def get_apps(limit=100, offset=0):
     """Returns a list of registered apps
+
+    :param limit: Number of returned items, default 100
+    :type limit: integer
+    :param offset: Offset for the query, default 0
+    :type offset: integer
 
     :rtype: list
     :returns: A list of PyBossa Applications
 
     """
-    return [App(app_data) for app_data in _pybossa_req('get', 'app')]
+    return [App(app_data) for app_data in _pybossa_req('get', 'app',
+        params=dict(limit=limit, offset=offset))]
 
 
 def get_app(app_id):
@@ -168,17 +174,20 @@ def delete_app(app_id):
 
 # Tasks
 
-def get_tasks(app_id, limit=100):
+def get_tasks(app_id, limit=100, offset=0):
     """Returns a list of tasks for a given application ID
 
     :param app_id: PyBossa Application ID
     :type app_id: integer
     :param limit: Number of returned items, default 100
     :type limit: integer
+    :param offset: Offset for the query, default 0
+    :type offset: integer
     :returns: True -- the response status code
     
     """
-    return [Task(task_data) for task_data in _pybossa_req('get', 'task', params=dict(app_id=app_id, limit=limit))]
+    return [Task(task_data) for task_data in _pybossa_req('get', 'task',
+        params=dict(app_id=app_id, limit=limit, offset=offset))]
 
 
 def find_tasks(app_id, **kwargs):
@@ -234,18 +243,21 @@ def delete_task(task):
 
 # Task Runs
 
-def get_taskruns(app_id, limit=100):
+def get_taskruns(app_id, limit=100, offset=0):
     """Returns a list of task runs for a given application ID
 
     :param app_id: PyBossa Application ID
     :type app_id: integer
     :param limit: Number of returned items, default 100
     :type limit: integer
+    :param offset: Offset for the query, default 0
+    :type offset: integer
     :rtype: list
     :returns: A list of task runs for the given application ID
 
     """
-    return [TaskRun(task_data) for task_data in _pybossa_req('get', 'taskrun', params=dict(app_id=app_id, limit=limit))]
+    return [TaskRun(task_data) for task_data in _pybossa_req('get', 'taskrun',
+        params=dict(app_id=app_id, limit=limit, offset=offset))]
 
 
 def find_taskruns(app_id, **kwargs):
