@@ -51,7 +51,6 @@ Module overview
 
 .. automodule:: pbclient
     :members:
-   pybossa-client
 
 
 Indices and tables
