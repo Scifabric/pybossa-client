@@ -4,7 +4,7 @@ setup(
     name = 'pybossa-client',
     version = '0.1a',
     packages = find_packages(),
-    install_requires = ['requests'],
+    install_requires = ['requests>=13'],
     # metadata for upload to PyPI
     author = 'Open Knowledge Foundation Labs',
     # TODO: change

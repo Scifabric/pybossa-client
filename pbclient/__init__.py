@@ -97,6 +97,11 @@ def find_app(**kwargs):
     return [App(app_data) for app_data in _pybossa_req('get', 'app', params=kwargs)]
 
 
+def create_app(name, short_name, description):
+    app = dict(name=name, short_name=short_name, description=description)
+    return _pybossa_req('post', 'app', payload=app)
+
+
 def update_app(app):
     return _pybossa_req('put', 'app', app.id, payload=app.data)
 
