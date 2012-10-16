@@ -3,4 +3,9 @@
 
 *.pyc
 
+*.un~
+*.swp
+
+env/
+
 pybossa_client.egg-info/
