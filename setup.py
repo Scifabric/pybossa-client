@@ -14,7 +14,7 @@ setup(
 ''',
     license = 'MIT',
     url = 'https://github.com/pybossa/pybossa-client',
-    download_url = '',
+    download_url = 'https://github.com/PyBossa/pybossa-client/zipball/master',
     include_package_data = True,
     classifiers = [
         'Development Status :: 3 - Alpha',
