@@ -9,7 +9,7 @@ Install
 You can install pybossa-client using **pip**, preferably while working in a 
 `virtualenv <http://www.virtualenv.org/en/latest/index.html>`_::
 
-    $ pip install https://github.com/PyBossa/pybossa-client/zipball/master 
+    $ pip install pybossa-client 
 
 Usage
 -----
