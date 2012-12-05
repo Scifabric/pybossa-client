@@ -271,4 +271,4 @@ def find_taskruns(app_id, **kwargs):
 
     """
     kwargs['app_id'] = app_id
-    return [TaskRun(task_data) for task_data in _pybossa_req('get', 'task', params=kwargs)]
+    return [TaskRun(task_data) for task_data in _pybossa_req('get', 'taskrun', params=kwargs)]
