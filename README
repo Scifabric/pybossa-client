@@ -28,8 +28,15 @@ Create an application::
 
 Change the long description of an app::
 
-    app = pbclient.find_app(short_name='flickrperson')
+    app = pbclient.find_app(short_name='flickrperson')[0]
     app.long_description = open('longdesc.html').read()
+    
+    pbclient.update_app(app)
+
+Replace the task presenter template::
+
+    app = pbclient.find_app(short_name='flickrperson')[0]
+    app.info['task_presenter'] = open('presenter.html').read()
     
     pbclient.update_app(app)
 
