@@ -213,6 +213,12 @@ def create_task(app_id, info, n_answers=30, priority_0=0, quorum=0):
     :type app_id: integer
     :param info: PyBossa Application info JSON field
     :type info: dict
+    :param n_answers: Number of answers or TaskRuns per task, default 30
+    :type n_answers: integer
+    :param priority_0: Value between 0 and 1 indicating priority of task within App (higher = more important), default 0.0
+    :type priority_0: float
+    :param quorum: Number of times this task should be done by different users, default 0
+    :type quorum: integer
     :returns: True -- the response status code
     """
     task = dict(
