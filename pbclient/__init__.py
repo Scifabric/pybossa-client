@@ -78,17 +78,17 @@ class DomainObject(object):
 
 class App(DomainObject):
     def __repr__(self):
-        return 'pybossa.App("' + self.short_name + '")'
+        return 'pybossa.App("' + self.short_name + '", ' + str(self.id) + ')'
 
 
 class Task(DomainObject):
     def __repr__(self):
-        return 'pybossa.Task("' + str(self.id) + '")'
+        return 'pybossa.Task(' + str(self.id) + ')'
 
 
 class TaskRun(DomainObject):
     def __repr__(self):
-        return 'pybossa.TaskRun("' + str(self.id) + '")'
+        return 'pybossa.TaskRun(' + str(self.id) + ')'
 
 
 # Apps
