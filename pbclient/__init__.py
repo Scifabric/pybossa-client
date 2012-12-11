@@ -206,7 +206,7 @@ def find_tasks(app_id, **kwargs):
     return [Task(task_data) for task_data in _pybossa_req('get', 'task', params=kwargs)]
 
 
-def create_task(app_id, info):
+def create_task(app_id, info, n_answers=30, priority_0=0, quorum=0):
     """Creates a task for a given application ID
 
     :param app_id: PyBossa Application ID
@@ -215,7 +215,15 @@ def create_task(app_id, info):
     :type info: dict
     :returns: True -- the response status code
     """
-    task = dict(app_id=app_id, state=0, calibration=0, priority_0=0, info=info)
+    task = dict(
+        app_id=app_id,
+        info=info,
+        state=0,
+        calibration=0,
+        priority_0=priority_0,
+        n_answers=n_answers,
+        quorum=quorum
+    )
     return _pybossa_req('post', 'task', payload=task)
 
 
