@@ -286,3 +286,16 @@ def find_taskruns(app_id, **kwargs):
     """
     kwargs['app_id'] = app_id
     return [TaskRun(task_data) for task_data in _pybossa_req('get', 'taskrun', params=kwargs)]
+
+
+def delete_taskrun(taskrun):
+    """Deletes the given taskrun
+
+    :param task: PyBossa task 
+    """
+    status = _pybossa_req('delete', 'taskrun', taskrun.id,
+            payload=dict(app_id=taskrun.app_id))
+    if status >= 300:
+        status = 'status: %d' % status
+        print 'could not delete taskrun', taskrun.id, '(%s)' % status
+
