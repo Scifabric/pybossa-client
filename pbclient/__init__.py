@@ -151,8 +151,15 @@ def create_app(name, short_name, description):
 
 
     """
-    app = dict(name=name, short_name=short_name, description=description)
-    return _pybossa_req('post', 'app', payload=app)
+    try:
+        app = dict(name=name, short_name=short_name, description=description)
+        res = _pybossa_req('post', 'app', payload=app)
+        if res.get('id'):
+            return App(res)
+        else:
+            return res
+    except:
+        raise
 
 
 def update_app(app):

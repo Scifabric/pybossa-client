@@ -78,6 +78,10 @@ class TestPybossaClient(object):
                      exception_msg=exception_msg)
         return error
 
+    def check_error_output(self, res, err):
+        for k in err.keys():
+            assert err[k] == res[k], err
+
     @patch('pbclient.requests.get')
     def test_00_get_app_not_found(self, Mock):
         """Test get_app not found works"""
@@ -86,11 +90,7 @@ class TestPybossaClient(object):
                                              target='app', exception_cls='NotFound')
         Mock.return_value = self.create_fake_request(not_found)
         err = self.client.get_app(1)
-        assert err['status'] == 'failed', err
-        assert err['action'] == 'GET', err
-        assert err['target'] == 'app', err
-        assert err['exception_cls'] == 'NotFound', err
-        assert err['status_code'] == 404, err
+        self.check_error_output(err, not_found)
 
     @patch('pbclient.requests.get')
     def test_01_get_app_found(self, Mock):
@@ -142,3 +142,15 @@ class TestPybossaClient(object):
                                      description=self.app['description'])
         assert app.id == self.app['id']
         assert app.short_name == self.app['short_name']
+
+    @patch('pbclient.requests.post')
+    def test_05_create_app_exists(self, Mock):
+        """Test create_app exists works"""
+        already_exists = self.create_error_output(action='POST', status_code=415,
+                                                  target='app', exception_cls='IntegrityError')
+
+        Mock.return_value = self.create_fake_request(already_exists, 415)
+        app = self.client.create_app(name=self.app['name'],
+                                     short_name=self.app['short_name'],
+                                     description=self.app['description'])
+        self.check_error_output(app, already_exists)
