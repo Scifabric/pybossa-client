@@ -169,7 +169,7 @@ class TestPybossaClient(object):
 
     @patch('pbclient.requests.post')
     def test_07_create_app_forbidden(self, Mock):
-        """Test create_app not authorized works"""
+        """Test create_app not forbidden works"""
         forbidden = self.create_error_output(action='POST', status_code=403,
                                              target='app', exception_cls='Forbidden')
 
@@ -178,3 +178,11 @@ class TestPybossaClient(object):
                                      short_name=self.app['short_name'],
                                      description=self.app['description'])
         self.check_error_output(app, forbidden)
+
+    @patch('pbclient.requests.put')
+    def test_08_update_app(self, Mock):
+        """Test update_app works"""
+        Mock.return_value = self.create_fake_request(self.app, 200)
+        app = self.client.update_app(self.app)
+        assert app.id == self.app['id'], app
+        assert app.short_name == self.app['short_name'], app
