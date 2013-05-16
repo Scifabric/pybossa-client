@@ -99,3 +99,18 @@ class TestPybossaClient(object):
         app = self.client.get_app(1)
         assert app.id == self.app['id'], app
         assert app.short_name == self.app['short_name'], app
+
+    @patch('pbclient.requests.get')
+    def test_01_get_apps(self, Mock):
+        """Test get_apps works"""
+        Mock.return_value = self.create_fake_request([self.app], 200)
+        apps = self.client.get_apps()
+        assert len(apps) == 1, apps
+        app = apps[0]
+        assert app.id == self.app['id'], app
+        assert app.short_name == self.app['short_name'], app
+
+        # Without apps
+        Mock.return_value = self.create_fake_request([], 200)
+        apps = self.client.get_apps()
+        assert len(apps) == 0, apps
