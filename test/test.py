@@ -145,7 +145,7 @@ class TestPybossaClient(object):
 
     @patch('pbclient.requests.post')
     def test_05_create_app_exists(self, Mock):
-        """Test create_app exists works"""
+        """Test create_app duplicate entry works"""
         already_exists = self.create_error_output(action='POST', status_code=415,
                                                   target='app', exception_cls='IntegrityError')
 
@@ -154,3 +154,27 @@ class TestPybossaClient(object):
                                      short_name=self.app['short_name'],
                                      description=self.app['description'])
         self.check_error_output(app, already_exists)
+
+    @patch('pbclient.requests.post')
+    def test_06_create_app_not_allowed(self, Mock):
+        """Test create_app not authorized works"""
+        not_authorized = self.create_error_output(action='POST', status_code=401,
+                                                  target='app', exception_cls='Unauthorized')
+
+        Mock.return_value = self.create_fake_request(not_authorized, 401)
+        app = self.client.create_app(name=self.app['name'],
+                                     short_name=self.app['short_name'],
+                                     description=self.app['description'])
+        self.check_error_output(app, not_authorized)
+
+    @patch('pbclient.requests.post')
+    def test_07_create_app_forbidden(self, Mock):
+        """Test create_app not authorized works"""
+        forbidden = self.create_error_output(action='POST', status_code=403,
+                                             target='app', exception_cls='Forbidden')
+
+        Mock.return_value = self.create_fake_request(forbidden, 403)
+        app = self.client.create_app(name=self.app['name'],
+                                     short_name=self.app['short_name'],
+                                     description=self.app['description'])
+        self.check_error_output(app, forbidden)
