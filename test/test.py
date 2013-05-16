@@ -114,3 +114,14 @@ class TestPybossaClient(object):
         Mock.return_value = self.create_fake_request([], 200)
         apps = self.client.get_apps()
         assert len(apps) == 0, apps
+
+    @patch('pbclient.requests.get')
+    def test_02_find_app(self, Mock):
+        """Test find_app works"""
+        Mock.return_value = self.create_fake_request([self.app], 200)
+        apps = self.client.find_app(short_name=self.app['short_name'])
+        # Only one app is found
+        assert len(apps) == 1, apps
+        app = apps[0]
+        assert app.id == self.app['id'], app
+        assert app.short_name == self.app['short_name'], app
