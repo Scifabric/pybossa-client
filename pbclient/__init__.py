@@ -48,7 +48,7 @@ def _pybossa_req(method, domain, id=None, payload=None, params=None):
         else:
             return True
     else:
-        return r.status_code
+        return json.loads(r.text)
 
 
 # app
@@ -116,14 +116,20 @@ def get_app(app_id):
     :type app_id: integer
     :rtype: PyBossa Application
     :returns: A PyBossa Application object
-    
-    """
-    return App(_pybossa_req('get', 'app', app_id))
 
+    """
+    try:
+        res = _pybossa_req('get', 'app', app_id)
+        if res.get('id'):
+            return App(res)
+        else:
+            return res
+    except:
+        raise
 
 def find_app(**kwargs):
     """Returns a list with matching app arguments
-    
+
     :param kwargs: PyBossa Application members
     :rtype: list
     :returns: A list of application that match the kwargs
@@ -143,7 +149,7 @@ def create_app(name, short_name, description):
     :type decription: string
     :returns: True -- the response status code
 
-    
+
     """
     app = dict(name=name, short_name=short_name, description=description)
     return _pybossa_req('post', 'app', payload=app)
@@ -156,7 +162,7 @@ def update_app(app):
     :type app: PyBossa Application
     :returns: True -- the response status code
 
-    
+
     """
     return _pybossa_req('put', 'app', app.id, payload=app.data)
 
@@ -167,7 +173,7 @@ def delete_app(app_id):
     :param app_id: PyBossa Application ID
     :type app_id: integer
     :returns: True -- the response status code
-    
+
     """
     return _pybossa_req('delete', 'app', app_id)
 
@@ -184,7 +190,7 @@ def get_tasks(app_id, limit=100, offset=0):
     :param offset: Offset for the query, default 0
     :type offset: integer
     :returns: True -- the response status code
-    
+
     """
     return [Task(task_data) for task_data in _pybossa_req('get', 'task',
         params=dict(app_id=app_id, limit=limit, offset=offset))]
@@ -235,9 +241,9 @@ def create_task(app_id, info, n_answers=30, priority_0=0, quorum=0):
 
 def update_task(task):
     """Updates a task for a given task ID
-    
+
     :param task: PyBossa task
-    
+
     """
     return _pybossa_req('put', 'task', task.id, payload=task.data)
 
@@ -245,7 +251,7 @@ def update_task(task):
 def delete_task(task):
     """Deletes a task for a given task ID
 
-    :param task: PyBossa task 
+    :param task: PyBossa task
 
     """
     #: :arg task: A task

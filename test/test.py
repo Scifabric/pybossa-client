@@ -23,6 +23,39 @@ FakeRequest = namedtuple('FakeRequest', ['text', 'status_code', 'headers'])
 
 
 class TestPybossaClient(object):
+    app = dict(info='info',
+               time_limit=0,
+               description="description",
+               short_name="slug",
+               owner_id=1,
+               id=1,
+               link="<link rel='self' title='app' href='http://localhost:5000/api/app/1'/>",
+               allow_anonymous_contributors=True,
+               hidden=0,
+               long_description="long_description",
+               name="test")
+
+    task = dict(info="info",
+                n_answers=30,
+                quorum=0,
+                links=["<link rel='parent' title='app' href='http://localhost:5000/api/app/1'/>"],
+                calibration=0,
+                app_id=1,
+                state="completed",
+                link="<link rel='self' title='task' href='http://localhost:5000/api/task/1'/>",
+                id=1)
+
+    taskrun = dict(info="info",
+                   user_id=None,
+                   links=[
+                       "<link rel='parent' title='app' href='http://localhost:5000/api/app/1'/>"
+                       "<link rel='parent' title='task' href='http://localhost:5000/api/taskrun/1'/>"],
+                   task_id=1,
+                   calibration=None,
+                   app_id=1,
+                   user_ip="127.0.0.1",
+                   link="<link rel='self' title='taskrun' href='http://localhost:5000/api/taskrun/1'/>",
+                   id=1)
 
     def setUp(self):
         self.client = pbclient
@@ -32,6 +65,8 @@ class TestPybossaClient(object):
     def create_fake_request(self, data, status=None, mimetype={'content-type': 'application/json'}):
         if status is None and data['status_code']:
             return FakeRequest(json.dumps(data), data['status_code'], mimetype)
+        else:
+            return FakeRequest(json.dumps(data), status, mimetype)
 
     def create_error_output(self, action, status_code, target,
                             exception_cls, exception_msg=None):
@@ -50,9 +85,16 @@ class TestPybossaClient(object):
         not_found = self.create_error_output(action='GET', status_code=404,
                                              target='app', exception_cls='NotFound')
         Mock.return_value = self.create_fake_request(not_found)
-        err = self.client.get_app(0)
+        err = self.client.get_app(1)
         assert err['status'] == 'failed', err
         assert err['action'] == 'GET', err
         assert err['target'] == 'app', err
         assert err['exception_cls'] == 'NotFound', err
         assert err['status_code'] == 404, err
+
+    @patch('pbclient.requests.get')
+    def test_01_get_app_found(self, Mock):
+        """Test get_app found works"""
+        Mock.return_value = self.create_fake_request(self.app, 200)
+        app = self.client.get_app(1)
+        assert app.id == 1, app
