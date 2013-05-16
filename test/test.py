@@ -183,6 +183,6 @@ class TestPybossaClient(object):
     def test_08_update_app(self, Mock):
         """Test update_app works"""
         Mock.return_value = self.create_fake_request(self.app, 200)
-        app = self.client.update_app(self.app)
+        app = self.client.update_app(pbclient.App(self.app))
         assert app.id == self.app['id'], app
         assert app.short_name == self.app['short_name'], app
