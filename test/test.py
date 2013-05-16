@@ -97,4 +97,5 @@ class TestPybossaClient(object):
         """Test get_app found works"""
         Mock.return_value = self.create_fake_request(self.app, 200)
         app = self.client.get_app(1)
-        assert app.id == 1, app
+        assert app.id == self.app['id'], app
+        assert app.short_name == self.app['short_name'], app
