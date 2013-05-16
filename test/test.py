@@ -132,3 +132,13 @@ class TestPybossaClient(object):
         Mock.return_value = self.create_fake_request([], 200)
         apps = self.client.find_app(short_name="foobar")
         assert len(apps) == 0, apps
+
+    @patch('pbclient.requests.post')
+    def test_04_create_app(self, Mock):
+        """Test create_app works"""
+        Mock.return_value = self.create_fake_request(self.app, 200)
+        app = self.client.create_app(name=self.app['name'],
+                                     short_name=self.app['short_name'],
+                                     description=self.app['description'])
+        assert app.id == self.app['id']
+        assert app.short_name == self.app['short_name']
