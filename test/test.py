@@ -186,3 +186,12 @@ class TestPybossaClient(object):
         app = self.client.update_app(pbclient.App(self.app))
         assert app.id == self.app['id'], app
         assert app.short_name == self.app['short_name'], app
+
+    @patch('pbclient.requests.put')
+    def test_08_update_app_not_found(self, Mock):
+        """Test update_app not found works"""
+        not_found = self.create_error_output(action='PUT', status_code=404,
+                                             target='app', exception_cls='NotFound')
+        Mock.return_value = self.create_fake_request(not_found, 404)
+        err = self.client.update_app(pbclient.App(self.app))
+        self.check_error_output(not_found, err)
