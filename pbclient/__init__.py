@@ -322,8 +322,15 @@ def get_taskruns(app_id, limit=100, offset=0):
     :returns: A list of task runs for the given application ID
 
     """
-    return [TaskRun(task_data) for task_data in _pybossa_req('get', 'taskrun',
-        params=dict(app_id=app_id, limit=limit, offset=offset))]
+    try:
+        res = _pybossa_req('get', 'taskrun',
+                           params=dict(app_id=app_id, limit=limit, offset=offset))
+        if type(res).__name__ == 'list':
+            return [TaskRun(taskrun) for taskrun in res]
+        else:
+            return res
+    except:
+        raise
 
 
 def find_taskruns(app_id, **kwargs):
@@ -336,5 +343,12 @@ def find_taskruns(app_id, **kwargs):
     :returns: A List of task runs that match the query members
 
     """
-    kwargs['app_id'] = app_id
-    return [TaskRun(task_data) for task_data in _pybossa_req('get', 'taskrun', params=kwargs)]
+    try:
+        kwargs['app_id'] = app_id
+        res = _pybossa_req('get', 'taskrun', params=kwargs)
+        if type(res).__name__ == 'list':
+            return [TaskRun(taskrun) for taskrun in res]
+        else:
+            return res
+    except:
+        raise
