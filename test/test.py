@@ -333,3 +333,40 @@ class TestPybossaClient(object):
                                                              errors[error])
                 err = self.client.update_task(pbclient.Task(self.task))
                 self.check_error_output(err_output, err)
+
+    @patch('pbclient.requests.get')
+    def test_get_taskruns(self, Mock):
+        """Test get_taskruns works"""
+        Mock.return_value = self.create_fake_request([self.taskrun], 200)
+        res = self.client.get_tasks(1)
+        assert len(res) == 1, len(res)
+        taskrun = res[0]
+        assert taskrun.id == self.taskrun['id'], taskrun
+        assert taskrun.app_id == self.taskrun['app_id'], taskrun
+
+    @patch('pbclient.requests.get')
+    def test_find_taskruns(self, Mock):
+        """Test find_taskruns works"""
+        Mock.return_value = self.create_fake_request([self.taskrun], 200)
+        res = self.client.find_taskruns(app_id=1)
+        assert len(res) == 1, len(res)
+        taskrun = res[0]
+        assert taskrun.id == self.taskrun['id'], taskrun
+        assert taskrun.app_id == self.taskrun['app_id'], taskrun
+
+    @patch('pbclient.requests.get')
+    def test_find_taskruns_errors(self, Mock):
+        """Test find taskruns errors works"""
+        targets = ['taskrun']
+        errors = {'Unauthorized': 401, 'NotFound': 404, 'Forbidden': 401,
+                  'TypeError': 415}
+        for target in targets:
+            for error in errors.keys():
+                err_output = self.create_error_output(action='GET',
+                                                      status_code=errors[error],
+                                                      target=target,
+                                                      exception_cls=error)
+                Mock.return_value = self.create_fake_request(err_output,
+                                                             errors[error])
+                err = self.client.find_taskruns(1)
+                self.check_error_output(err_output, err)
