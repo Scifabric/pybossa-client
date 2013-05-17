@@ -280,7 +280,14 @@ def update_task(task):
     :param task: PyBossa task
 
     """
-    return _pybossa_req('put', 'task', task.id, payload=task.data)
+    try:
+        res = _pybossa_req('put', 'task', task.id, payload=task.data)
+        if res.get('id'):
+            return Task(res)
+        else:
+            return res
+    except:
+        raise
 
 
 def delete_task(task_id):
