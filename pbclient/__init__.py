@@ -229,8 +229,15 @@ def find_tasks(app_id, **kwargs):
 
     """
 
-    kwargs['app_id'] = app_id
-    return [Task(task_data) for task_data in _pybossa_req('get', 'task', params=kwargs)]
+    try:
+        kwargs['app_id'] = app_id
+        res = _pybossa_req('get', 'task', params=kwargs)
+        if type(res).__name__ == 'list':
+            return [Task(task) for task in res]
+        else:
+            return res
+    except:
+        raise
 
 
 def create_task(app_id, info, n_answers=30, priority_0=0, quorum=0):
