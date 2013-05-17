@@ -255,16 +255,23 @@ def create_task(app_id, info, n_answers=30, priority_0=0, quorum=0):
     :type quorum: integer
     :returns: True -- the response status code
     """
-    task = dict(
-        app_id=app_id,
-        info=info,
-        state=0,
-        calibration=0,
-        priority_0=priority_0,
-        n_answers=n_answers,
-        quorum=quorum
-    )
-    return _pybossa_req('post', 'task', payload=task)
+    try:
+        task = dict(
+            app_id=app_id,
+            info=info,
+            state=0,
+            calibration=0,
+            priority_0=priority_0,
+            n_answers=n_answers,
+            quorum=quorum
+        )
+        res = _pybossa_req('post', 'task', payload=task)
+        if res.get('id'):
+            return Task(res)
+        else:
+            return res
+    except:
+        raise
 
 
 def update_task(task):
