@@ -127,6 +127,23 @@ class TestPybossaClient(object):
         assert app.short_name == self.app['short_name'], app
 
     @patch('pbclient.requests.get')
+    def test_find_app_errors(self, Mock):
+        """Test find app errors works"""
+        targets = ['app']
+        errors = {'Unauthorized': 401, 'NotFound': 404, 'Forbidden': 401,
+                  'TypeError': 415}
+        for target in targets:
+            for error in errors.keys():
+                err_output = self.create_error_output(action='GET',
+                                                      status_code=errors[error],
+                                                      target=target,
+                                                      exception_cls=error)
+                Mock.return_value = self.create_fake_request(err_output,
+                                                             errors[error])
+                err = self.client.find_app(short_name=self.app['short_name'])
+                self.check_error_output(err_output, err)
+
+    @patch('pbclient.requests.get')
     def test_03_find_app_not_found(self, Mock):
         """Test find_app not found works"""
         Mock.return_value = self.create_fake_request([], 200)
