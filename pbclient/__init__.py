@@ -213,8 +213,15 @@ def get_tasks(app_id, limit=100, offset=0):
     :returns: True -- the response status code
 
     """
-    return [Task(task_data) for task_data in _pybossa_req('get', 'task',
-        params=dict(app_id=app_id, limit=limit, offset=offset))]
+    try:
+        res = _pybossa_req('get', 'task',
+                           params=dict(app_id=app_id, limit=limit, offset=offset))
+        if type(res).__name__ == 'list':
+            return [Task(task) for task in res]
+        else:
+            return res
+    except:
+        raise
 
 
 def find_tasks(app_id, **kwargs):
