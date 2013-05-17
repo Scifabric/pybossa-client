@@ -246,3 +246,13 @@ class TestPybossaClient(object):
                 if target == 'task':
                     err = self.client.delete_task(1)
                 self.check_error_output(err_output, err)
+
+    @patch('pbclient.requests.get')
+    def test_get_tasks(self, Mock):
+        """Test get_tasks works"""
+        Mock.return_value = self.create_fake_request([self.task], 200)
+        res = self.client.get_tasks(1)
+        assert len(res) == 1, len(res)
+        task = res[0]
+        assert task.id == self.task['id'], task
+        assert task.app_id == self.task['app_id'], task
