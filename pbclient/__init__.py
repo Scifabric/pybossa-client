@@ -135,7 +135,14 @@ def find_app(**kwargs):
     :returns: A list of application that match the kwargs
 
     """
-    return [App(app_data) for app_data in _pybossa_req('get', 'app', params=kwargs)]
+    try:
+        res = _pybossa_req('get', 'app', params=kwargs)
+        if type(res).__name__ == 'list':
+            return [App(app) for app in res]
+        else:
+            return res
+    except:
+        raise
 
 
 def create_app(name, short_name, description):
