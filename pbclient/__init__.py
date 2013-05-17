@@ -41,7 +41,7 @@ def _pybossa_req(method, domain, id=None, payload=None, params=None):
         r = requests.put(url, params=params, headers=headers, data=json.dumps(payload))
     elif method == 'delete':
         r = requests.delete(url, params=params, headers=headers, data=json.dumps(payload))
-    print r.status_code, r.status_code / 100
+    #print r.status_code, r.status_code / 100
     if r.status_code / 100 == 2:
         if r.text and r.text != '""':
             return json.loads(r.text)
@@ -105,8 +105,14 @@ def get_apps(limit=100, offset=0):
     :returns: A list of PyBossa Applications
 
     """
-    return [App(app_data) for app_data in _pybossa_req('get', 'app',
-        params=dict(limit=limit, offset=offset))]
+    try:
+        res = _pybossa_req('get', 'app', params=dict(limit=limit, offset=offset))
+        if type(res).__name__ == 'list':
+            return [App(app) for app in res]
+        else:
+            return res
+    except:
+        raise
 
 
 def get_app(app_id):
