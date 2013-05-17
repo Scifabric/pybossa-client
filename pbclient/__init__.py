@@ -269,17 +269,21 @@ def update_task(task):
     return _pybossa_req('put', 'task', task.id, payload=task.data)
 
 
-def delete_task(task):
+def delete_task(task_id):
     """Deletes a task for a given task ID
 
     :param task: PyBossa task
 
     """
     #: :arg task: A task
-    status = _pybossa_req('delete', 'task', task.id, payload=dict(app_id=task.app_id))
-    if status >= 300:
-        status = 'status: %d' % status
-        print 'could not delete task', task.id, '(%s)' % status
+    try:
+        res = _pybossa_req('delete', 'task', task_id)
+        if type(res).__name__ == 'bool':
+            return True
+        else:
+            return res
+    except:
+        raise
 
 
 # Task Runs
