@@ -291,3 +291,20 @@ class TestPybossaClient(object):
         task = self.client.create_task(self.app['id'], self.task['info'])
         assert task.id == self.task['id'], task
         assert task.app_id == self.task['app_id'], task
+
+    @patch('pbclient.requests.post')
+    def test_create_task_errors(self, Mock):
+        """Test create task errors works"""
+        targets = ['task']
+        errors = {'Unauthorized': 401, 'NotFound': 404, 'Forbidden': 401,
+                  'TypeError': 415}
+        for target in targets:
+            for error in errors.keys():
+                err_output = self.create_error_output(action='POST',
+                                                      status_code=errors[error],
+                                                      target=target,
+                                                      exception_cls=error)
+                Mock.return_value = self.create_fake_request(err_output,
+                                                             errors[error])
+                err = self.client.create_task(self.app['id'], self.task['info'])
+                self.check_error_output(err_output, err)
