@@ -287,7 +287,7 @@ class TestPybossaClient(object):
     @patch('pbclient.requests.post')
     def test_create_task(self, Mock):
         """Test create_task works"""
-        Mock.return_value = self.create_fake_request(self.task)
+        Mock.return_value = self.create_fake_request(self.task, 200)
         task = self.client.create_task(self.app['id'], self.task['info'])
         assert task.id == self.task['id'], task
         assert task.app_id == self.task['app_id'], task
