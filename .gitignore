@@ -12,3 +12,6 @@ dist/
 build/
 
 pybossa_client.egg-info/
+
+.noseids
+
