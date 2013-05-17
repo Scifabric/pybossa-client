@@ -268,7 +268,7 @@ class TestPybossaClient(object):
         assert task.app_id == self.task['app_id'], task
 
     @patch('pbclient.requests.get')
-    def test_find_tasks_delete(self, Mock):
+    def test_find_tasks_errors(self, Mock):
         """Test find task errors works"""
         targets = ['task']
         errors = {'Unauthorized': 401, 'NotFound': 404, 'Forbidden': 401,
