@@ -222,8 +222,15 @@ class TestPybossaClient(object):
         assert res is True, res
 
     @patch('pbclient.requests.delete')
-    def test_app_delete(self, Mock):
-        """Test delete app errors works"""
+    def test_13_delete_task(self, Mock):
+        """Test delete_task works"""
+        Mock.return_value = self.create_fake_request('', 204, 'text/html')
+        res = self.client.delete_task(1)
+        assert res is True, res
+
+    @patch('pbclient.requests.delete')
+    def test_app_task_delete(self, Mock):
+        """Test delete app and task errors works"""
         targets = ['app', 'task']
         errors = {'Unauthorized': 401, 'NotFound': 404, 'Forbidden': 401}
         for target in targets:
