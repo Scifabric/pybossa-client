@@ -133,6 +133,7 @@ def get_app(app_id):
     except:
         raise
 
+
 def find_app(**kwargs):
     """Returns a list with matching app arguments
 
