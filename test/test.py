@@ -224,7 +224,7 @@ class TestPybossaClient(object):
     @patch('pbclient.requests.delete')
     def test_app_delete(self, Mock):
         """Test delete app errors works"""
-        targets = ['app', 'task', 'taskrun']
+        targets = ['app', 'task']
         errors = {'Unauthorized': 401, 'NotFound': 404, 'Forbidden': 401}
         for target in targets:
             for error in errors.keys():
@@ -234,5 +234,8 @@ class TestPybossaClient(object):
                                                       exception_cls=error)
                 Mock.return_value = self.create_fake_request(err_output,
                                                              errors[error])
-                err = self.client.delete_app(1)
+                if target == 'app':
+                    err = self.client.delete_app(1)
+                if target == 'task':
+                    err = self.client.delete_task(1)
                 self.check_error_output(err_output, err)
