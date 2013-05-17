@@ -188,10 +188,51 @@ class TestPybossaClient(object):
         assert app.short_name == self.app['short_name'], app
 
     @patch('pbclient.requests.put')
-    def test_08_update_app_not_found(self, Mock):
+    def test_09_update_app_not_found(self, Mock):
         """Test update_app not found works"""
         not_found = self.create_error_output(action='PUT', status_code=404,
                                              target='app', exception_cls='NotFound')
         Mock.return_value = self.create_fake_request(not_found, 404)
         err = self.client.update_app(pbclient.App(self.app))
         self.check_error_output(not_found, err)
+
+    @patch('pbclient.requests.put')
+    def test_10_update_app_forbidden(self, Mock):
+        """Test update_app forbidden works"""
+        forbidden = self.create_error_output(action='PUT', status_code=403,
+                                             target='app', exception_cls='Forbidden')
+        Mock.return_value = self.create_fake_request(forbidden, 403)
+        err = self.client.update_app(pbclient.App(self.app))
+        self.check_error_output(forbidden, err)
+
+    @patch('pbclient.requests.put')
+    def test_11_update_app_unauthorized(self, Mock):
+        """Test update_app unauthorized works"""
+        unauthorized = self.create_error_output(action='PUT', status_code=401,
+                                                target='app', exception_cls='Unauthorized')
+        Mock.return_value = self.create_fake_request(unauthorized, 401)
+        err = self.client.update_app(pbclient.App(self.app))
+        self.check_error_output(unauthorized, err)
+
+    @patch('pbclient.requests.delete')
+    def test_12_delete_app(self, Mock):
+        """Test delete_app works"""
+        Mock.return_value = self.create_fake_request('', 204, 'text/html')
+        res = self.client.delete_app(1)
+        assert res is True, res
+
+    @patch('pbclient.requests.delete')
+    def test_app_delete(self, Mock):
+        """Test delete app errors works"""
+        targets = ['app', 'task', 'taskrun']
+        errors = {'Unauthorized': 401, 'NotFound': 404, 'Forbidden': 401}
+        for target in targets:
+            for error in errors.keys():
+                err_output = self.create_error_output(action='DELETE',
+                                                      status_code=errors[error],
+                                                      target=target,
+                                                      exception_cls=error)
+                Mock.return_value = self.create_fake_request(err_output,
+                                                             errors[error])
+                err = self.client.delete_app(1)
+                self.check_error_output(err_output, err)
