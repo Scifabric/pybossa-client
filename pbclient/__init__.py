@@ -41,14 +41,14 @@ def _pybossa_req(method, domain, id=None, payload=None, params=None):
         r = requests.put(url, params=params, headers=headers, data=json.dumps(payload))
     elif method == 'delete':
         r = requests.delete(url, params=params, headers=headers, data=json.dumps(payload))
-    # print r.status_code, r.status_code / 100
+    #print r.status_code, r.status_code / 100
     if r.status_code / 100 == 2:
-        if r.text:
+        if r.text and r.text != '""':
             return json.loads(r.text)
         else:
             return True
     else:
-        return r.status_code
+        return json.loads(r.text)
 
 
 # app
@@ -105,8 +105,14 @@ def get_apps(limit=100, offset=0):
     :returns: A list of PyBossa Applications
 
     """
-    return [App(app_data) for app_data in _pybossa_req('get', 'app',
-        params=dict(limit=limit, offset=offset))]
+    try:
+        res = _pybossa_req('get', 'app', params=dict(limit=limit, offset=offset))
+        if type(res).__name__ == 'list':
+            return [App(app) for app in res]
+        else:
+            return res
+    except:
+        raise
 
 
 def get_app(app_id):
@@ -116,20 +122,34 @@ def get_app(app_id):
     :type app_id: integer
     :rtype: PyBossa Application
     :returns: A PyBossa Application object
-    
+
     """
-    return App(_pybossa_req('get', 'app', app_id))
+    try:
+        res = _pybossa_req('get', 'app', app_id)
+        if res.get('id'):
+            return App(res)
+        else:
+            return res
+    except:
+        raise
 
 
 def find_app(**kwargs):
     """Returns a list with matching app arguments
-    
+
     :param kwargs: PyBossa Application members
     :rtype: list
     :returns: A list of application that match the kwargs
 
     """
-    return [App(app_data) for app_data in _pybossa_req('get', 'app', params=kwargs)]
+    try:
+        res = _pybossa_req('get', 'app', params=kwargs)
+        if type(res).__name__ == 'list':
+            return [App(app) for app in res]
+        else:
+            return res
+    except:
+        raise
 
 
 def create_app(name, short_name, description):
@@ -143,10 +163,17 @@ def create_app(name, short_name, description):
     :type decription: string
     :returns: True -- the response status code
 
-    
+
     """
-    app = dict(name=name, short_name=short_name, description=description)
-    return _pybossa_req('post', 'app', payload=app)
+    try:
+        app = dict(name=name, short_name=short_name, description=description)
+        res = _pybossa_req('post', 'app', payload=app)
+        if res.get('id'):
+            return App(res)
+        else:
+            return res
+    except:
+        raise
 
 
 def update_app(app):
@@ -156,9 +183,16 @@ def update_app(app):
     :type app: PyBossa Application
     :returns: True -- the response status code
 
-    
+
     """
-    return _pybossa_req('put', 'app', app.id, payload=app.data)
+    try:
+        res = _pybossa_req('put', 'app', app.id, payload=app.data)
+        if res.get('id'):
+            return App(res)
+        else:
+            return res
+    except:
+        raise
 
 
 def delete_app(app_id):
@@ -167,9 +201,16 @@ def delete_app(app_id):
     :param app_id: PyBossa Application ID
     :type app_id: integer
     :returns: True -- the response status code
-    
+
     """
-    return _pybossa_req('delete', 'app', app_id)
+    try:
+        res = _pybossa_req('delete', 'app', app_id)
+        if type(res).__name__ == 'bool':
+            return True
+        else:
+            return res
+    except:
+        raise
 
 
 # Tasks
@@ -184,10 +225,17 @@ def get_tasks(app_id, limit=100, offset=0):
     :param offset: Offset for the query, default 0
     :type offset: integer
     :returns: True -- the response status code
-    
+
     """
-    return [Task(task_data) for task_data in _pybossa_req('get', 'task',
-        params=dict(app_id=app_id, limit=limit, offset=offset))]
+    try:
+        res = _pybossa_req('get', 'task',
+                           params=dict(app_id=app_id, limit=limit, offset=offset))
+        if type(res).__name__ == 'list':
+            return [Task(task) for task in res]
+        else:
+            return res
+    except:
+        raise
 
 
 def find_tasks(app_id, **kwargs):
@@ -202,8 +250,15 @@ def find_tasks(app_id, **kwargs):
 
     """
 
-    kwargs['app_id'] = app_id
-    return [Task(task_data) for task_data in _pybossa_req('get', 'task', params=kwargs)]
+    try:
+        kwargs['app_id'] = app_id
+        res = _pybossa_req('get', 'task', params=kwargs)
+        if type(res).__name__ == 'list':
+            return [Task(task) for task in res]
+        else:
+            return res
+    except:
+        raise
 
 
 def create_task(app_id, info, n_answers=30, priority_0=0, quorum=0):
@@ -221,38 +276,56 @@ def create_task(app_id, info, n_answers=30, priority_0=0, quorum=0):
     :type quorum: integer
     :returns: True -- the response status code
     """
-    task = dict(
-        app_id=app_id,
-        info=info,
-        state=0,
-        calibration=0,
-        priority_0=priority_0,
-        n_answers=n_answers,
-        quorum=quorum
-    )
-    return _pybossa_req('post', 'task', payload=task)
+    try:
+        task = dict(
+            app_id=app_id,
+            info=info,
+            state=0,
+            calibration=0,
+            priority_0=priority_0,
+            n_answers=n_answers,
+            quorum=quorum
+        )
+        res = _pybossa_req('post', 'task', payload=task)
+        if res.get('id'):
+            return Task(res)
+        else:
+            return res
+    except:
+        raise
 
 
 def update_task(task):
     """Updates a task for a given task ID
-    
+
     :param task: PyBossa task
-    
+
     """
-    return _pybossa_req('put', 'task', task.id, payload=task.data)
+    try:
+        res = _pybossa_req('put', 'task', task.id, payload=task.data)
+        if res.get('id'):
+            return Task(res)
+        else:
+            return res
+    except:
+        raise
 
 
-def delete_task(task):
+def delete_task(task_id):
     """Deletes a task for a given task ID
 
-    :param task: PyBossa task 
+    :param task: PyBossa task
 
     """
     #: :arg task: A task
-    status = _pybossa_req('delete', 'task', task.id, payload=dict(app_id=task.app_id))
-    if status >= 300:
-        status = 'status: %d' % status
-        print 'could not delete task', task.id, '(%s)' % status
+    try:
+        res = _pybossa_req('delete', 'task', task_id)
+        if type(res).__name__ == 'bool':
+            return True
+        else:
+            return res
+    except:
+        raise
 
 
 # Task Runs
@@ -270,8 +343,15 @@ def get_taskruns(app_id, limit=100, offset=0):
     :returns: A list of task runs for the given application ID
 
     """
-    return [TaskRun(task_data) for task_data in _pybossa_req('get', 'taskrun',
-        params=dict(app_id=app_id, limit=limit, offset=offset))]
+    try:
+        res = _pybossa_req('get', 'taskrun',
+                           params=dict(app_id=app_id, limit=limit, offset=offset))
+        if type(res).__name__ == 'list':
+            return [TaskRun(taskrun) for taskrun in res]
+        else:
+            return res
+    except:
+        raise
 
 
 def find_taskruns(app_id, **kwargs):
@@ -284,18 +364,28 @@ def find_taskruns(app_id, **kwargs):
     :returns: A List of task runs that match the query members
 
     """
-    kwargs['app_id'] = app_id
-    return [TaskRun(task_data) for task_data in _pybossa_req('get', 'taskrun', params=kwargs)]
+    try:
+        kwargs['app_id'] = app_id
+        res = _pybossa_req('get', 'taskrun', params=kwargs)
+        if type(res).__name__ == 'list':
+            return [TaskRun(taskrun) for taskrun in res]
+        else:
+            return res
+    except:
+        raise
 
 
 def delete_taskrun(taskrun):
     """Deletes the given taskrun
 
-    :param task: PyBossa task 
+    :param task: PyBossa task
     """
-    status = _pybossa_req('delete', 'taskrun', taskrun.id,
-            payload=dict(app_id=taskrun.app_id))
-    if status >= 300:
-        status = 'status: %d' % status
-        print 'could not delete taskrun', taskrun.id, '(%s)' % status
-
+    try:
+        res = _pybossa_req('delete', 'taskrun', taskrun.id,
+                           payload=dict(app_id=taskrun.app_id))
+        if type(res).__name__ == 'boo':
+            return True
+        else:
+            return res
+    except:
+        raise
