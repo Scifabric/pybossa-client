@@ -375,15 +375,14 @@ def find_taskruns(app_id, **kwargs):
         raise
 
 
-def delete_taskrun(taskrun):
+def delete_taskrun(taskrun_id):
     """Deletes the given taskrun
 
     :param task: PyBossa task
     """
     try:
-        res = _pybossa_req('delete', 'taskrun', taskrun.id,
-                           payload=dict(app_id=taskrun.app_id))
-        if type(res).__name__ == 'boo':
+        res = _pybossa_req('delete', 'taskrun', taskrun_id)
+        if type(res).__name__ == 'bool':
             return True
         else:
             return res
