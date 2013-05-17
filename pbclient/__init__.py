@@ -41,9 +41,9 @@ def _pybossa_req(method, domain, id=None, payload=None, params=None):
         r = requests.put(url, params=params, headers=headers, data=json.dumps(payload))
     elif method == 'delete':
         r = requests.delete(url, params=params, headers=headers, data=json.dumps(payload))
-    # print r.status_code, r.status_code / 100
+    print r.status_code, r.status_code / 100
     if r.status_code / 100 == 2:
-        if r.text:
+        if r.text and r.text != '""':
             return json.loads(r.text)
         else:
             return True
@@ -171,7 +171,14 @@ def update_app(app):
 
 
     """
-    return _pybossa_req('put', 'app', app.id, payload=app.data)
+    try:
+        res = _pybossa_req('put', 'app', app.id, payload=app.data)
+        if res.get('id'):
+            return App(res)
+        else:
+            return res
+    except:
+        raise
 
 
 def delete_app(app_id):
@@ -182,7 +189,14 @@ def delete_app(app_id):
     :returns: True -- the response status code
 
     """
-    return _pybossa_req('delete', 'app', app_id)
+    try:
+        res = _pybossa_req('delete', 'app', app_id)
+        if type(res).__name__ == 'bool':
+            return True
+        else:
+            return res
+    except:
+        raise
 
 
 # Tasks
