@@ -1,3 +1,6 @@
+.. image:: https://travis-ci.org/PyBossa/pybossa-client.png
+   :target: https://travis-ci.org/#!/PyBossa/pybossa-client
+
 Dead simple Python client for PyBossa
 =====================================
 
