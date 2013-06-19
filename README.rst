@@ -46,3 +46,6 @@ Create a new task::
         'image': 'http://farm9.staticflickr.com/8146/7566819662_f2c74e77d8_m.jpg'
     }
     pbclient.create_task(app_id, task_info)
+
+**Note**: Categories actions POST, PUT and DELETE are only authorized to
+admin users.
