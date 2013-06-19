@@ -46,6 +46,10 @@ Create a new task::
     }
     pbclient.create_task(app_id, task_info)
 
+.. note::
+    The Category methods POST, PUT and DELETE are only allowed to **PyBossa
+    admin users**. If you are not an admin, you can only get the Category names
+
 Module overview
 ---------------
 
