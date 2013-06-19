@@ -81,6 +81,11 @@ class App(DomainObject):
         return 'pybossa.App("' + self.short_name + '", ' + str(self.id) + ')'
 
 
+class Category(DomainObject):
+    def __repr__(self):
+        return 'pybossa.Category("' + self.short_name + '", ' + str(self.id) + ')'
+
+
 class Task(DomainObject):
     def __repr__(self):
         return 'pybossa.Task(' + str(self.id) + ')'
@@ -205,6 +210,124 @@ def delete_app(app_id):
     """
     try:
         res = _pybossa_req('delete', 'app', app_id)
+        if type(res).__name__ == 'bool':
+            return True
+        else:
+            return res
+    except:
+        raise
+
+# Category
+
+
+def get_categories(limit=20, offset=0):
+    """Returns a list of registered categories
+
+    :param limit: Number of returned items, default 20
+    :type limit: integer
+    :param offset: Offset for the query, default 0
+    :type offset: integer
+
+    :rtype: list
+    :returns: A list of PyBossa Categories
+
+    """
+    try:
+        res = _pybossa_req('get', 'category', params=dict(limit=limit, offset=offset))
+        if type(res).__name__ == 'list':
+            return [Category(category) for category in res]
+        else:
+            return res
+    except:
+        raise
+
+
+def get_category(category_id):
+    """Returns a PyBossa Category for the category_id
+
+    :param category_id: PyBossa Category ID
+    :type category_id: integer
+    :rtype: PyBossa Category
+    :returns: A PyBossa Category object
+
+    """
+    try:
+        res = _pybossa_req('get', 'category', category_id)
+        if res.get('id'):
+            return Category(res)
+        else:
+            return res
+    except:
+        raise
+
+
+def find_category(**kwargs):
+    """Returns a list with matching Category arguments
+
+    :param kwargs: PyBossa Category members
+    :rtype: list
+    :returns: A list of application that match the kwargs
+
+    """
+    try:
+        res = _pybossa_req('get', 'category', params=kwargs)
+        if type(res).__name__ == 'list':
+            return [Category(category) for category in res]
+        else:
+            return res
+    except:
+        raise
+
+
+def create_category(name, description):
+    """Creates a Category
+
+    :param name: PyBossa Category Name
+    :type name: string
+    :param description: PyBossa Category description
+    :type decription: string
+    :returns: True -- the response status code
+    """
+    try:
+        category = dict(name=name, short_name=name.lower().replace(" ", ""),
+                        description=description)
+        res = _pybossa_req('post', 'category', payload=category)
+        if res.get('id'):
+            return Category(res)
+        else:
+            return res
+    except:
+        raise
+
+
+def update_category(category):
+    """Updates a Category instance
+
+    :param app: PyBossa Category
+    :type app: PyBossa Category
+    :returns: True -- the response status code
+
+    """
+    try:
+        res = _pybossa_req('put', 'category', category.id, payload=category.data)
+        if res.get('id'):
+            return Category(res)
+        else:
+            return res
+    except:
+        raise
+
+
+def delete_category(category_id):
+    """Deletes a Category with id = category_id
+
+    :param category_id: PyBossa Category ID
+    :type category_id: integer
+    :returns: True -- the response status code
+
+    """
+    try:
+        res = _pybossa_req('delete', 'category', category_id)
         if type(res).__name__ == 'bool':
             return True
         else:
