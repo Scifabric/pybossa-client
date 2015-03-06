@@ -16,6 +16,7 @@
 
 from mock import patch
 from base import TestPyBossaClient
+from nose.tools import assert_raises
 
 
 class TestPybossaClientTaskRun(TestPyBossaClient):
@@ -37,18 +38,25 @@ class TestPybossaClientTaskRun(TestPyBossaClient):
                 if target == 'task':
                     err = self.client.delete_task(1)
                 if target == 'taskrun':
-                    err = self.client.delete_task(1)
+                    err = self.client.delete_taskrun(1)
                 self.check_error_output(err_output, err)
 
     @patch('pbclient.requests.get')
     def test_get_taskruns(self, Mock):
         """Test get_taskruns works"""
         Mock.return_value = self.create_fake_request([self.taskrun], 200)
-        res = self.client.get_tasks(1)
+        res = self.client.get_taskruns(1)
         assert len(res) == 1, len(res)
         taskrun = res[0]
         assert taskrun.id == self.taskrun['id'], taskrun
         assert taskrun.project_id == self.taskrun['project_id'], taskrun
+
+    @patch('pbclient.requests.get')
+    def test_get_taskruns_error(self, Mock):
+        """Test get_taskruns error works"""
+        Mock.return_value = self.create_fake_request(self.taskrun, 200)
+        assert_raises(TypeError, self.client.get_taskruns, 1)
+
 
     @patch('pbclient.requests.get')
     def test_find_taskruns(self, Mock):

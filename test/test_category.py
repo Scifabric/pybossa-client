@@ -17,6 +17,7 @@
 import pbclient
 from mock import patch
 from base import TestPyBossaClient
+from nose.tools import assert_raises
 
 
 class TestPybossaClientCategory(TestPyBossaClient):
@@ -69,6 +70,13 @@ class TestPybossaClientCategory(TestPyBossaClient):
         Mock.return_value = self.create_fake_request([], 200)
         categories = self.client.get_categories()
         assert len(categories) == 0, categories
+
+    @patch('pbclient.requests.get')
+    def test_01_get_categories_error(self, Mock):
+        """Test get_categories error works"""
+        Mock.return_value = self.create_fake_request(self.category, 200)
+        assert_raises(TypeError, self.client.get_categories)
+
 
     @patch('pbclient.requests.get')
     def test_02_find_category(self, Mock):
@@ -192,3 +200,10 @@ class TestPybossaClientCategory(TestPyBossaClient):
         Mock.return_value = self.create_fake_request('', 204, 'text/html')
         res = self.client.delete_category(1)
         assert res is True, res
+
+    @patch('pbclient.requests.delete')
+    def test_13_delete_category(self, Mock):
+        """Test delete_category error works"""
+        Mock.return_value = self.create_fake_request('404', 404, 'text/html')
+        res = self.client.delete_category(1)
+        assert res == '404', res

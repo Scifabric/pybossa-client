@@ -17,6 +17,7 @@
 import pbclient
 from mock import patch
 from base import TestPyBossaClient
+from nose.tools import assert_raises
 
 
 class TestPybossaClientProject(TestPyBossaClient):
@@ -78,9 +79,7 @@ class TestPybossaClientProject(TestPyBossaClient):
     def test_01_get_project(self, Mock):
         """Test get_project works"""
         Mock.return_value = self.create_fake_request(self.project, 200)
-        project = self.client.get_projects()
-        assert project.id == self.project['id'], project
-        assert project.short_name == self.project['short_name'], project
+        assert_raises(TypeError, self.client.get_projects)
 
     @patch('pbclient.requests.get')
     def test_02_find_project(self, Mock):
