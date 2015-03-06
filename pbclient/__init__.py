@@ -90,7 +90,7 @@ class Project(DomainObject):
 
     """Project class."""
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: no cover
         """Return a representation."""
         tmp = 'pybossa.Project("' + self.short_name + '", ' + str(self.id) + ')'
         return tmp
@@ -100,7 +100,7 @@ class Category(DomainObject):
 
     """Category class."""
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: no cover
         """Return a representation."""
         tmp = ('pybossa.Category("' + self.short_name + '", '
                + str(self.id) + ')')
@@ -111,7 +111,7 @@ class Task(DomainObject):
 
     """Task Class."""
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: no cover
         """Return a represenation."""
         return 'pybossa.Task(' + str(self.id) + ')'
 
@@ -120,7 +120,7 @@ class TaskRun(DomainObject):
 
     """Class TaskRun."""
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: no cover
         """Return representation."""
         return 'pybossa.TaskRun(' + str(self.id) + ')'
 
@@ -145,7 +145,7 @@ def get_projects(limit=100, offset=0):
         if type(res).__name__ == 'list':
             return [Project(project) for project in res]
         else:
-            return res
+            return Project(res)
     except:
         raise
 
