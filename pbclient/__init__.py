@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-"""
-    Dead simple pybossa client
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~
+"""Dead simple pybossa client.
 
-    A simple PyBossa client
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    :license: MIT
+A simple PyBossa client
+
+:license: MIT
 """
 
 _opts = dict()
@@ -15,15 +15,17 @@ import json
 
 
 def set(key, val):
+    """Set key to value."""
     global _opts
     _opts[key] = val
 
 
 def _pybossa_req(method, domain, id=None, payload=None, params=None):
     """
-    Sends a JSON request
+    Send a JSON request.
 
-    Returns True if everything went well, otherwise it returns the status code of the response
+    Returns True if everything went well, otherwise it returns the status
+    code of the response.
     """
     headers = {'content-type': 'application/json'}
     url = _opts['endpoint'] + '/api/' + domain
@@ -36,12 +38,15 @@ def _pybossa_req(method, domain, id=None, payload=None, params=None):
     if method == 'get':
         r = requests.get(url, params=params)
     elif method == 'post':
-        r = requests.post(url, params=params, headers=headers, data=json.dumps(payload))
+        r = requests.post(url, params=params, headers=headers,
+                          data=json.dumps(payload))
     elif method == 'put':
-        r = requests.put(url, params=params, headers=headers, data=json.dumps(payload))
+        r = requests.put(url, params=params, headers=headers,
+                         data=json.dumps(payload))
     elif method == 'delete':
-        r = requests.delete(url, params=params, headers=headers, data=json.dumps(payload))
-    #print r.status_code, r.status_code / 100
+        r = requests.delete(url, params=params, headers=headers,
+                            data=json.dumps(payload))
+    # print r.status_code, r.status_code / 100
     if r.status_code / 100 == 2:
         if r.text and r.text != '""':
             return json.loads(r.text)
@@ -54,10 +59,14 @@ def _pybossa_req(method, domain, id=None, payload=None, params=None):
 # project
 class DomainObject(object):
 
+    """Main Domain object Class."""
+
     def __init__(self, data):
+        """Init method."""
         self.__dict__['data'] = data
 
     def __getattr__(self, name):
+        """Get attribute."""
         data = self.__dict__['data']
         if name == 'data':
             return data
@@ -66,6 +75,7 @@ class DomainObject(object):
         raise AttributeError('unknown attribute: ' + name)
 
     def __setattr__(self, name, value):
+        """Set attribute."""
         data = self.__dict__['data']
         if name == 'data':
             self.__dict__['data'] = value
@@ -77,29 +87,48 @@ class DomainObject(object):
 
 
 class Project(DomainObject):
+
+    """Project class."""
+
     def __repr__(self):
-        return 'pybossa.App("' + self.short_name + '", ' + str(self.id) + ')'
+        """Return a representation."""
+        tmp = 'pybossa.Project("' + self.short_name + '", ' + str(self.id) + ')'
+        return tmp
 
 
 class Category(DomainObject):
+
+    """Category class."""
+
     def __repr__(self):
-        return 'pybossa.Category("' + self.short_name + '", ' + str(self.id) + ')'
+        """Return a representation."""
+        tmp = ('pybossa.Category("' + self.short_name + '", '
+               + str(self.id) + ')')
+        return tmp
 
 
 class Task(DomainObject):
+
+    """Task Class."""
+
     def __repr__(self):
+        """Return a represenation."""
         return 'pybossa.Task(' + str(self.id) + ')'
 
 
 class TaskRun(DomainObject):
+
+    """Class TaskRun."""
+
     def __repr__(self):
+        """Return representation."""
         return 'pybossa.TaskRun(' + str(self.id) + ')'
 
 
-# Apps
+# Projects
 
 def get_projects(limit=100, offset=0):
-    """Returns a list of registered projects
+    """Return a list of registered projects.
 
     :param limit: Number of returned items, default 100
     :type limit: integer
@@ -111,7 +140,8 @@ def get_projects(limit=100, offset=0):
 
     """
     try:
-        res = _pybossa_req('get', 'project', params=dict(limit=limit, offset=offset))
+        res = _pybossa_req('get', 'project',
+                           params=dict(limit=limit, offset=offset))
         if type(res).__name__ == 'list':
             return [Project(project) for project in res]
         else:
@@ -121,7 +151,7 @@ def get_projects(limit=100, offset=0):
 
 
 def get_project(project_id):
-    """Returns a PyBossa Project for the project_id
+    """Return a PyBossa Project for the project_id.
 
     :param project_id: PyBossa Project ID
     :type project_id: integer
@@ -140,7 +170,7 @@ def get_project(project_id):
 
 
 def find_project(**kwargs):
-    """Returns a list with matching project arguments
+    """Return a list with matching project arguments.
 
     :param kwargs: PyBossa Project members
     :rtype: list
@@ -158,7 +188,7 @@ def find_project(**kwargs):
 
 
 def create_project(name, short_name, description):
-    """Creates a project
+    """Create a project.
 
     :param name: PyBossa Project Name
     :type name: string
@@ -168,10 +198,10 @@ def create_project(name, short_name, description):
     :type decription: string
     :returns: True -- the response status code
 
-
     """
     try:
-        project = dict(name=name, short_name=short_name, description=description)
+        project = dict(name=name, short_name=short_name,
+                       description=description)
         res = _pybossa_req('post', 'project', payload=project)
         if res.get('id'):
             return Project(res)
@@ -182,12 +212,11 @@ def create_project(name, short_name, description):
 
 
 def update_project(project):
-    """Updates a project instance
+    """Update a project instance.
 
     :param project: PyBossa project
     :type project: PyBossa Project
     :returns: True -- the response status code
-
 
     """
     try:
@@ -201,7 +230,7 @@ def update_project(project):
 
 
 def delete_project(project_id):
-    """Deletes a Project with id = project_id
+    """Delete a Project with id = project_id.
 
     :param project_id: PyBossa Project ID
     :type project_id: integer
@@ -221,7 +250,7 @@ def delete_project(project_id):
 
 
 def get_categories(limit=20, offset=0):
-    """Returns a list of registered categories
+    """Return a list of registered categories.
 
     :param limit: Number of returned items, default 20
     :type limit: integer
@@ -233,7 +262,8 @@ def get_categories(limit=20, offset=0):
 
     """
     try:
-        res = _pybossa_req('get', 'category', params=dict(limit=limit, offset=offset))
+        res = _pybossa_req('get', 'category',
+                           params=dict(limit=limit, offset=offset))
         if type(res).__name__ == 'list':
             return [Category(category) for category in res]
         else:
@@ -243,7 +273,7 @@ def get_categories(limit=20, offset=0):
 
 
 def get_category(category_id):
-    """Returns a PyBossa Category for the category_id
+    """Return a PyBossa Category for the category_id.
 
     :param category_id: PyBossa Category ID
     :type category_id: integer
@@ -262,7 +292,7 @@ def get_category(category_id):
 
 
 def find_category(**kwargs):
-    """Returns a list with matching Category arguments
+    """Return a list with matching Category arguments.
 
     :param kwargs: PyBossa Category members
     :rtype: list
@@ -280,7 +310,7 @@ def find_category(**kwargs):
 
 
 def create_category(name, description):
-    """Creates a Category
+    """Create a Category.
 
     :param name: PyBossa Category Name
     :type name: string
@@ -301,7 +331,7 @@ def create_category(name, description):
 
 
 def update_category(category):
-    """Updates a Category instance
+    """Update a Category instance.
 
     :param category: PyBossa Category
     :type category: PyBossa Category
@@ -309,7 +339,8 @@ def update_category(category):
 
     """
     try:
-        res = _pybossa_req('put', 'category', category.id, payload=category.data)
+        res = _pybossa_req('put', 'category',
+                           category.id, payload=category.data)
         if res.get('id'):
             return Category(res)
         else:
@@ -319,7 +350,7 @@ def update_category(category):
 
 
 def delete_category(category_id):
-    """Deletes a Category with id = category_id
+    """Delete a Category with id = category_id.
 
     :param category_id: PyBossa Category ID
     :type category_id: integer
@@ -339,7 +370,7 @@ def delete_category(category_id):
 # Tasks
 
 def get_tasks(project_id, limit=100, offset=0):
-    """Returns a list of tasks for a given project ID
+    """Return a list of tasks for a given project ID.
 
     :param project_id: PyBossa Project ID
     :type project_id: integer
@@ -352,7 +383,8 @@ def get_tasks(project_id, limit=100, offset=0):
     """
     try:
         res = _pybossa_req('get', 'task',
-                           params=dict(project_id=project_id, limit=limit, offset=offset))
+                           params=dict(project_id=project_id,
+                                       limit=limit, offset=offset))
         if type(res).__name__ == 'list':
             return [Task(task) for task in res]
         else:
@@ -362,7 +394,7 @@ def get_tasks(project_id, limit=100, offset=0):
 
 
 def find_tasks(project_id, **kwargs):
-    """Returns a list of matched tasks for a given project ID
+    """Return a list of matched tasks for a given project ID.
 
     :param project_id: PyBossa Project ID
     :type project_id: integer
@@ -372,7 +404,6 @@ def find_tasks(project_id, **kwargs):
     :returns: A list of tasks that match the kwargs
 
     """
-
     try:
         kwargs['project_id'] = project_id
         res = _pybossa_req('get', 'task', params=kwargs)
@@ -385,7 +416,7 @@ def find_tasks(project_id, **kwargs):
 
 
 def create_task(project_id, info, n_answers=30, priority_0=0, quorum=0):
-    """Creates a task for a given project ID
+    """Create a task for a given project ID.
 
     :param project_id: PyBossa Project ID
     :type project_id: integer
@@ -393,9 +424,11 @@ def create_task(project_id, info, n_answers=30, priority_0=0, quorum=0):
     :type info: dict
     :param n_answers: Number of answers or TaskRuns per task, default 30
     :type n_answers: integer
-    :param priority_0: Value between 0 and 1 indicating priority of task within App (higher = more important), default 0.0
+    :param priority_0: Value between 0 and 1 indicating priority of task within
+        Project (higher = more important), default 0.0
     :type priority_0: float
-    :param quorum: Number of times this task should be done by different users, default 0
+    :param quorum: Number of times this task should be done by different users,
+        default 0
     :type quorum: integer
     :returns: True -- the response status code
     """
@@ -419,7 +452,7 @@ def create_task(project_id, info, n_answers=30, priority_0=0, quorum=0):
 
 
 def update_task(task):
-    """Updates a task for a given task ID
+    """Update a task for a given task ID.
 
     :param task: PyBossa task
 
@@ -435,7 +468,7 @@ def update_task(task):
 
 
 def delete_task(task_id):
-    """Deletes a task for a given task ID
+    """Delete a task for a given task ID.
 
     :param task: PyBossa task
 
@@ -454,7 +487,7 @@ def delete_task(task_id):
 # Task Runs
 
 def get_taskruns(project_id, limit=100, offset=0):
-    """Returns a list of task runs for a given project ID
+    """Return a list of task runs for a given project ID.
 
     :param project_id: PyBossa Application ID
     :type project_id: integer
@@ -468,7 +501,8 @@ def get_taskruns(project_id, limit=100, offset=0):
     """
     try:
         res = _pybossa_req('get', 'taskrun',
-                           params=dict(project_id=project_id, limit=limit, offset=offset))
+                           params=dict(project_id=project_id,
+                                       limit=limit, offset=offset))
         if type(res).__name__ == 'list':
             return [TaskRun(taskrun) for taskrun in res]
         else:
@@ -478,7 +512,7 @@ def get_taskruns(project_id, limit=100, offset=0):
 
 
 def find_taskruns(project_id, **kwargs):
-    """Returns a list of matched task runs for a given project ID
+    """Return a list of matched task runs for a given project ID.
 
     :param project_id: PyBossa Project ID
     :type project_id: integer
@@ -499,7 +533,7 @@ def find_taskruns(project_id, **kwargs):
 
 
 def delete_taskrun(taskrun_id):
-    """Deletes the given taskrun
+    """Delete the given taskrun.
 
     :param task: PyBossa task
     """
