@@ -21,27 +21,27 @@ from base import TestPyBossaClient
 
 class TestPybossaClientApp(TestPyBossaClient):
     @patch('pbclient.requests.get')
-    def test_00_get_app_not_found(self, Mock):
-        """Test get_app not found works"""
+    def test_00_get_project_not_found(self, Mock):
+        """Test get_project not found works"""
         # App does not exist should return 404 error object
         not_found = self.create_error_output(action='GET', status_code=404,
-                                             target='app', exception_cls='NotFound')
+                                             target='project', exception_cls='NotFound')
         Mock.return_value = self.create_fake_request(not_found)
         err = self.client.get_project(1)
         self.check_error_output(err, not_found)
 
     @patch('pbclient.requests.get')
-    def test_01_get_app_found(self, Mock):
-        """Test get_app found works"""
-        Mock.return_value = self.create_fake_request(self.app, 200)
-        app = self.client.get_project(1)
-        assert app.id == self.app['id'], app
-        assert app.short_name == self.app['short_name'], app
+    def test_01_get_project_found(self, Mock):
+        """Test get_project found works"""
+        Mock.return_value = self.create_fake_request(self.project, 200)
+        project = self.client.get_project(1)
+        assert project.id == self.project['id'], project
+        assert project.short_name == self.project['short_name'], project
 
     @patch('pbclient.requests.get')
-    def test_get_app_errors(self, Mock):
-        """Test get app errors works"""
-        targets = ['app']
+    def test_get_project_errors(self, Mock):
+        """Test get project errors works"""
+        targets = ['project']
         errors = {'Unauthorized': 401, 'NotFound': 404, 'Forbidden': 401,
                   'TypeError': 415}
         for target in targets:
@@ -56,35 +56,35 @@ class TestPybossaClientApp(TestPyBossaClient):
                 self.check_error_output(err_output, err)
 
     @patch('pbclient.requests.get')
-    def test_01_get_apps(self, Mock):
-        """Test get_apps works"""
-        Mock.return_value = self.create_fake_request([self.app], 200)
-        apps = self.client.get_projects()
-        assert len(apps) == 1, apps
-        app = apps[0]
-        assert app.id == self.app['id'], app
-        assert app.short_name == self.app['short_name'], app
+    def test_01_get_projects(self, Mock):
+        """Test get_projects works"""
+        Mock.return_value = self.create_fake_request([self.project], 200)
+        projects = self.client.get_projects()
+        assert len(projects) == 1, projects
+        project = projects[0]
+        assert project.id == self.project['id'], project
+        assert project.short_name == self.project['short_name'], project
 
-        # Without apps
+        # Without projects
         Mock.return_value = self.create_fake_request([], 200)
-        apps = self.client.get_projects()
-        assert len(apps) == 0, apps
+        projects = self.client.get_projects()
+        assert len(projects) == 0, projects
 
     @patch('pbclient.requests.get')
-    def test_02_find_app(self, Mock):
-        """Test find_app works"""
-        Mock.return_value = self.create_fake_request([self.app], 200)
-        apps = self.client.find_project(short_name=self.app['short_name'])
-        # Only one app is found
-        assert len(apps) == 1, apps
-        app = apps[0]
-        assert app.id == self.app['id'], app
-        assert app.short_name == self.app['short_name'], app
+    def test_02_find_project(self, Mock):
+        """Test find_project works"""
+        Mock.return_value = self.create_fake_request([self.project], 200)
+        projects = self.client.find_project(short_name=self.project['short_name'])
+        # Only one project is found
+        assert len(projects) == 1, projects
+        project = projects[0]
+        assert project.id == self.project['id'], project
+        assert project.short_name == self.project['short_name'], project
 
     @patch('pbclient.requests.get')
-    def test_find_app_errors(self, Mock):
-        """Test find app errors works"""
-        targets = ['app']
+    def test_find_project_errors(self, Mock):
+        """Test find project errors works"""
+        targets = ['project']
         errors = {'Unauthorized': 401, 'NotFound': 404, 'Forbidden': 401,
                   'TypeError': 415}
         for target in targets:
@@ -95,100 +95,100 @@ class TestPybossaClientApp(TestPyBossaClient):
                                                       exception_cls=error)
                 Mock.return_value = self.create_fake_request(err_output,
                                                              errors[error])
-                err = self.client.find_project(short_name=self.app['short_name'])
+                err = self.client.find_project(short_name=self.project['short_name'])
                 self.check_error_output(err_output, err)
 
     @patch('pbclient.requests.get')
-    def test_03_find_app_not_found(self, Mock):
-        """Test find_app not found works"""
+    def test_03_find_project_not_found(self, Mock):
+        """Test find_project not found works"""
         Mock.return_value = self.create_fake_request([], 200)
-        apps = self.client.find_project(short_name="foobar")
-        assert len(apps) == 0, apps
+        projects = self.client.find_project(short_name="foobar")
+        assert len(projects) == 0, projects
 
     @patch('pbclient.requests.post')
-    def test_04_create_app(self, Mock):
-        """Test create_app works"""
-        Mock.return_value = self.create_fake_request(self.app, 200)
-        app = self.client.create_project(name=self.app['name'],
-                                     short_name=self.app['short_name'],
-                                     description=self.app['description'])
-        assert app.id == self.app['id']
-        assert app.short_name == self.app['short_name']
+    def test_04_create_project(self, Mock):
+        """Test create_project works"""
+        Mock.return_value = self.create_fake_request(self.project, 200)
+        project = self.client.create_project(name=self.project['name'],
+                                     short_name=self.project['short_name'],
+                                     description=self.project['description'])
+        assert project.id == self.project['id']
+        assert project.short_name == self.project['short_name']
 
     @patch('pbclient.requests.post')
-    def test_05_create_app_exists(self, Mock):
-        """Test create_app duplicate entry works"""
+    def test_05_create_project_exists(self, Mock):
+        """Test create_project duplicate entry works"""
         already_exists = self.create_error_output(action='POST', status_code=415,
-                                                  target='app', exception_cls='IntegrityError')
+                                                  target='project', exception_cls='IntegrityError')
 
         Mock.return_value = self.create_fake_request(already_exists, 415)
-        app = self.client.create_project(name=self.app['name'],
-                                     short_name=self.app['short_name'],
-                                     description=self.app['description'])
-        self.check_error_output(app, already_exists)
+        project = self.client.create_project(name=self.project['name'],
+                                     short_name=self.project['short_name'],
+                                     description=self.project['description'])
+        self.check_error_output(project, already_exists)
 
     @patch('pbclient.requests.post')
-    def test_06_create_app_not_allowed(self, Mock):
-        """Test create_app not authorized works"""
+    def test_06_create_project_not_allowed(self, Mock):
+        """Test create_project not authorized works"""
         not_authorized = self.create_error_output(action='POST', status_code=401,
-                                                  target='app', exception_cls='Unauthorized')
+                                                  target='project', exception_cls='Unauthorized')
 
         Mock.return_value = self.create_fake_request(not_authorized, 401)
-        app = self.client.create_project(name=self.app['name'],
-                                     short_name=self.app['short_name'],
-                                     description=self.app['description'])
-        self.check_error_output(app, not_authorized)
+        project = self.client.create_project(name=self.project['name'],
+                                     short_name=self.project['short_name'],
+                                     description=self.project['description'])
+        self.check_error_output(project, not_authorized)
 
     @patch('pbclient.requests.post')
-    def test_07_create_app_forbidden(self, Mock):
-        """Test create_app not forbidden works"""
+    def test_07_create_project_forbidden(self, Mock):
+        """Test create_project not forbidden works"""
         forbidden = self.create_error_output(action='POST', status_code=403,
-                                             target='app', exception_cls='Forbidden')
+                                             target='project', exception_cls='Forbidden')
 
         Mock.return_value = self.create_fake_request(forbidden, 403)
-        app = self.client.create_project(name=self.app['name'],
-                                     short_name=self.app['short_name'],
-                                     description=self.app['description'])
-        self.check_error_output(app, forbidden)
+        project = self.client.create_project(name=self.project['name'],
+                                     short_name=self.project['short_name'],
+                                     description=self.project['description'])
+        self.check_error_output(project, forbidden)
 
     @patch('pbclient.requests.put')
-    def test_08_update_app(self, Mock):
-        """Test update_app works"""
-        Mock.return_value = self.create_fake_request(self.app, 200)
-        app = self.client.update_project(pbclient.Project(self.app))
-        assert app.id == self.app['id'], app
-        assert app.short_name == self.app['short_name'], app
+    def test_08_update_project(self, Mock):
+        """Test update_project works"""
+        Mock.return_value = self.create_fake_request(self.project, 200)
+        project = self.client.update_project(pbclient.Project(self.project))
+        assert project.id == self.project['id'], project
+        assert project.short_name == self.project['short_name'], project
 
     @patch('pbclient.requests.put')
-    def test_09_update_app_not_found(self, Mock):
-        """Test update_app not found works"""
+    def test_09_update_project_not_found(self, Mock):
+        """Test update_project not found works"""
         not_found = self.create_error_output(action='PUT', status_code=404,
-                                             target='app', exception_cls='NotFound')
+                                             target='project', exception_cls='NotFound')
         Mock.return_value = self.create_fake_request(not_found, 404)
-        err = self.client.update_project(pbclient.Project(self.app))
+        err = self.client.update_project(pbclient.Project(self.project))
         self.check_error_output(not_found, err)
 
     @patch('pbclient.requests.put')
-    def test_10_update_app_forbidden(self, Mock):
-        """Test update_app forbidden works"""
+    def test_10_update_project_forbidden(self, Mock):
+        """Test update_project forbidden works"""
         forbidden = self.create_error_output(action='PUT', status_code=403,
-                                             target='app', exception_cls='Forbidden')
+                                             target='project', exception_cls='Forbidden')
         Mock.return_value = self.create_fake_request(forbidden, 403)
-        err = self.client.update_project(pbclient.Project(self.app))
+        err = self.client.update_project(pbclient.Project(self.project))
         self.check_error_output(forbidden, err)
 
     @patch('pbclient.requests.put')
-    def test_11_update_app_unauthorized(self, Mock):
-        """Test update_app unauthorized works"""
+    def test_11_update_project_unauthorized(self, Mock):
+        """Test update_project unauthorized works"""
         unauthorized = self.create_error_output(action='PUT', status_code=401,
-                                                target='app', exception_cls='Unauthorized')
+                                                target='project', exception_cls='Unauthorized')
         Mock.return_value = self.create_fake_request(unauthorized, 401)
-        err = self.client.update_project(pbclient.Project(self.app))
+        err = self.client.update_project(pbclient.Project(self.project))
         self.check_error_output(unauthorized, err)
 
     @patch('pbclient.requests.delete')
-    def test_12_delete_app(self, Mock):
-        """Test delete_app works"""
+    def test_12_delete_project(self, Mock):
+        """Test delete_project works"""
         Mock.return_value = self.create_fake_request('', 204, 'text/html')
         res = self.client.delete_project(1)
         assert res is True, res

@@ -85,7 +85,7 @@ class TestPybossaClientTask(TestPyBossaClient):
     def test_create_task(self, Mock):
         """Test create_task works"""
         Mock.return_value = self.create_fake_request(self.task, 200)
-        task = self.client.create_task(self.app['id'], self.task['info'])
+        task = self.client.create_task(self.project['id'], self.task['info'])
         assert task.id == self.task['id'], task
         assert task.app_id == self.task['app_id'], task
 
@@ -103,7 +103,7 @@ class TestPybossaClientTask(TestPyBossaClient):
                                                       exception_cls=error)
                 Mock.return_value = self.create_fake_request(err_output,
                                                              errors[error])
-                err = self.client.create_task(self.app['id'], self.task['info'])
+                err = self.client.create_task(self.project['id'], self.task['info'])
                 self.check_error_output(err_output, err)
 
     @patch('pbclient.requests.put')
