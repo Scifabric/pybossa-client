@@ -48,7 +48,7 @@ class TestPybossaClientTaskRun(TestPyBossaClient):
         assert len(res) == 1, len(res)
         taskrun = res[0]
         assert taskrun.id == self.taskrun['id'], taskrun
-        assert taskrun.app_id == self.taskrun['app_id'], taskrun
+        assert taskrun.project_id == self.taskrun['project_id'], taskrun
 
     @patch('pbclient.requests.get')
     def test_find_taskruns(self, Mock):
@@ -58,7 +58,7 @@ class TestPybossaClientTaskRun(TestPyBossaClient):
         assert len(res) == 1, len(res)
         taskrun = res[0]
         assert taskrun.id == self.taskrun['id'], taskrun
-        assert taskrun.app_id == self.taskrun['app_id'], taskrun
+        assert taskrun.project_id == self.taskrun['project_id'], taskrun
 
     @patch('pbclient.requests.get')
     def test_find_taskruns_errors(self, Mock):

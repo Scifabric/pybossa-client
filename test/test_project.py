@@ -19,11 +19,14 @@ from mock import patch
 from base import TestPyBossaClient
 
 
-class TestPybossaClientApp(TestPyBossaClient):
+class TestPybossaClientProject(TestPyBossaClient):
+
     @patch('pbclient.requests.get')
     def test_00_get_project_not_found(self, Mock):
         """Test get_project not found works"""
         # App does not exist should return 404 error object
+        pbclient.set('endpoint', 'http://localhost')
+        pbclient.set('api_key', 'key')
         not_found = self.create_error_output(action='GET', status_code=404,
                                              target='project', exception_cls='NotFound')
         Mock.return_value = self.create_fake_request(not_found)
@@ -69,6 +72,15 @@ class TestPybossaClientApp(TestPyBossaClient):
         Mock.return_value = self.create_fake_request([], 200)
         projects = self.client.get_projects()
         assert len(projects) == 0, projects
+
+
+    @patch('pbclient.requests.get')
+    def test_01_get_project(self, Mock):
+        """Test get_project works"""
+        Mock.return_value = self.create_fake_request(self.project, 200)
+        project = self.client.get_projects()
+        assert project.id == self.project['id'], project
+        assert project.short_name == self.project['short_name'], project
 
     @patch('pbclient.requests.get')
     def test_02_find_project(self, Mock):
