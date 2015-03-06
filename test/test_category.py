@@ -155,7 +155,7 @@ class TestPybossaClientCategory(TestPyBossaClient):
     def test_08_update_category(self, Mock):
         """Test update_category works"""
         Mock.return_value = self.create_fake_request(self.category, 200)
-        category = self.client.update_category(pbclient.App(self.category))
+        category = self.client.update_category(pbclient.Project(self.category))
         assert category.id == self.category['id'], category
         assert category.short_name == self.category['short_name'], category
 
@@ -165,7 +165,7 @@ class TestPybossaClientCategory(TestPyBossaClient):
         not_found = self.create_error_output(action='PUT', status_code=404,
                                              target='category', exception_cls='NotFound')
         Mock.return_value = self.create_fake_request(not_found, 404)
-        err = self.client.update_category(pbclient.App(self.category))
+        err = self.client.update_category(pbclient.Project(self.category))
         self.check_error_output(not_found, err)
 
     @patch('pbclient.requests.put')
@@ -174,7 +174,7 @@ class TestPybossaClientCategory(TestPyBossaClient):
         forbidden = self.create_error_output(action='PUT', status_code=403,
                                              target='category', exception_cls='Forbidden')
         Mock.return_value = self.create_fake_request(forbidden, 403)
-        err = self.client.update_category(pbclient.App(self.category))
+        err = self.client.update_category(pbclient.Project(self.category))
         self.check_error_output(forbidden, err)
 
     @patch('pbclient.requests.put')
@@ -183,7 +183,7 @@ class TestPybossaClientCategory(TestPyBossaClient):
         unauthorized = self.create_error_output(action='PUT', status_code=401,
                                                 target='category', exception_cls='Unauthorized')
         Mock.return_value = self.create_fake_request(unauthorized, 401)
-        err = self.client.update_category(pbclient.App(self.category))
+        err = self.client.update_category(pbclient.Project(self.category))
         self.check_error_output(unauthorized, err)
 
     @patch('pbclient.requests.delete')

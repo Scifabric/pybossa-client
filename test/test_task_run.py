@@ -33,7 +33,7 @@ class TestPybossaClientTaskRun(TestPyBossaClient):
                 Mock.return_value = self.create_fake_request(err_output,
                                                              errors[error])
                 if target == 'app':
-                    err = self.client.delete_app(1)
+                    err = self.client.delete_project(1)
                 if target == 'task':
                     err = self.client.delete_task(1)
                 if target == 'taskrun':
@@ -54,7 +54,7 @@ class TestPybossaClientTaskRun(TestPyBossaClient):
     def test_find_taskruns(self, Mock):
         """Test find_taskruns works"""
         Mock.return_value = self.create_fake_request([self.taskrun], 200)
-        res = self.client.find_taskruns(app_id=1)
+        res = self.client.find_taskruns(project_id=1)
         assert len(res) == 1, len(res)
         taskrun = res[0]
         assert taskrun.id == self.taskrun['id'], taskrun

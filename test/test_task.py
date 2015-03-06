@@ -58,7 +58,7 @@ class TestPybossaClientTask(TestPyBossaClient):
     def test_find_tasks(self, Mock):
         """Test find_tasks works"""
         Mock.return_value = self.create_fake_request([self.task], 200)
-        res = self.client.find_tasks(app_id=1)
+        res = self.client.find_tasks(project_id=1)
         assert len(res) == 1, len(res)
         task = res[0]
         assert task.id == self.task['id'], task
