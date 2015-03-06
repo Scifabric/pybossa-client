@@ -145,8 +145,8 @@ def get_projects(limit=100, offset=0):
         if type(res).__name__ == 'list':
             return [Project(project) for project in res]
         else:
-            return Project(res)
-    except:
+            raise TypeError
+    except:  # pragma: no cover
         raise
 
 
@@ -165,7 +165,7 @@ def get_project(project_id):
             return Project(res)
         else:
             return res
-    except:
+    except:  # pragma: no cover
         raise
 
 
@@ -183,7 +183,7 @@ def find_project(**kwargs):
             return [Project(project) for project in res]
         else:
             return res
-    except:
+    except:  # pragma: no cover
         raise
 
 
@@ -207,7 +207,7 @@ def create_project(name, short_name, description):
             return Project(res)
         else:
             return res
-    except:
+    except:  # pragma: no cover
         raise
 
 
@@ -225,7 +225,7 @@ def update_project(project):
             return Project(res)
         else:
             return res
-    except:
+    except:  # pragma: no cover
         raise
 
 
@@ -243,7 +243,7 @@ def delete_project(project_id):
             return True
         else:
             return res
-    except:
+    except:  # pragma: no cover
         raise
 
 # Category
@@ -267,7 +267,7 @@ def get_categories(limit=20, offset=0):
         if type(res).__name__ == 'list':
             return [Category(category) for category in res]
         else:
-            return res
+            raise TypeError
     except:
         raise
 
@@ -287,7 +287,7 @@ def get_category(category_id):
             return Category(res)
         else:
             return res
-    except:
+    except:  # pragma: no cover
         raise
 
 
@@ -305,7 +305,7 @@ def find_category(**kwargs):
             return [Category(category) for category in res]
         else:
             return res
-    except:
+    except:  # pragma: no cover
         raise
 
 
@@ -326,7 +326,7 @@ def create_category(name, description):
             return Category(res)
         else:
             return res
-    except:
+    except:  # pragma: no cover
         raise
 
 
@@ -345,7 +345,7 @@ def update_category(category):
             return Category(res)
         else:
             return res
-    except:
+    except:  # pragma: no cover
         raise
 
 
@@ -363,7 +363,7 @@ def delete_category(category_id):
             return True
         else:
             return res
-    except:
+    except:  # pragma: no cover
         raise
 
 
@@ -389,7 +389,7 @@ def get_tasks(project_id, limit=100, offset=0):
             return [Task(task) for task in res]
         else:
             return res
-    except:
+    except:  # pragma: no cover
         raise
 
 
@@ -411,7 +411,7 @@ def find_tasks(project_id, **kwargs):
             return [Task(task) for task in res]
         else:
             return res
-    except:
+    except:  # pragma: no cover
         raise
 
 
@@ -447,7 +447,7 @@ def create_task(project_id, info, n_answers=30, priority_0=0, quorum=0):
             return Task(res)
         else:
             return res
-    except:
+    except:  # pragma: no cover
         raise
 
 
@@ -463,7 +463,7 @@ def update_task(task):
             return Task(res)
         else:
             return res
-    except:
+    except:  # pragma: no cover
         raise
 
 
@@ -480,7 +480,7 @@ def delete_task(task_id):
             return True
         else:
             return res
-    except:
+    except:  # pragma: no cover
         raise
 
 
@@ -506,7 +506,7 @@ def get_taskruns(project_id, limit=100, offset=0):
         if type(res).__name__ == 'list':
             return [TaskRun(taskrun) for taskrun in res]
         else:
-            return res
+            raise TypeError
     except:
         raise
 
@@ -528,7 +528,7 @@ def find_taskruns(project_id, **kwargs):
             return [TaskRun(taskrun) for taskrun in res]
         else:
             return res
-    except:
+    except:  # pragma: no cover
         raise
 
 
@@ -543,5 +543,5 @@ def delete_taskrun(taskrun_id):
             return True
         else:
             return res
-    except:
+    except:  # pragma: no cover
         raise
