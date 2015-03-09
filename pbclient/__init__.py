@@ -489,7 +489,7 @@ def delete_task(task_id):
 def get_taskruns(project_id, limit=100, offset=0):
     """Return a list of task runs for a given project ID.
 
-    :param project_id: PyBossa Application ID
+    :param project_id: PyBossa Project ID
     :type project_id: integer
     :param limit: Number of returned items, default 100
     :type limit: integer
