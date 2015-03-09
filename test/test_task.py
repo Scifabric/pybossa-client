@@ -35,7 +35,7 @@ class TestPybossaClientTask(TestPyBossaClient):
         assert len(res) == 1, len(res)
         task = res[0]
         assert task.id == self.task['id'], task
-        assert task.app_id == self.task['app_id'], task
+        assert task.project_id == self.task['project_id'], task
 
     @patch('pbclient.requests.get')
     def test_get_tasks_errors(self, Mock):
@@ -58,11 +58,11 @@ class TestPybossaClientTask(TestPyBossaClient):
     def test_find_tasks(self, Mock):
         """Test find_tasks works"""
         Mock.return_value = self.create_fake_request([self.task], 200)
-        res = self.client.find_tasks(app_id=1)
+        res = self.client.find_tasks(project_id=1)
         assert len(res) == 1, len(res)
         task = res[0]
         assert task.id == self.task['id'], task
-        assert task.app_id == self.task['app_id'], task
+        assert task.project_id == self.task['project_id'], task
 
     @patch('pbclient.requests.get')
     def test_find_tasks_errors(self, Mock):
@@ -85,9 +85,9 @@ class TestPybossaClientTask(TestPyBossaClient):
     def test_create_task(self, Mock):
         """Test create_task works"""
         Mock.return_value = self.create_fake_request(self.task, 200)
-        task = self.client.create_task(self.app['id'], self.task['info'])
+        task = self.client.create_task(self.project['id'], self.task['info'])
         assert task.id == self.task['id'], task
-        assert task.app_id == self.task['app_id'], task
+        assert task.project_id == self.task['project_id'], task
 
     @patch('pbclient.requests.post')
     def test_create_task_errors(self, Mock):
@@ -103,7 +103,7 @@ class TestPybossaClientTask(TestPyBossaClient):
                                                       exception_cls=error)
                 Mock.return_value = self.create_fake_request(err_output,
                                                              errors[error])
-                err = self.client.create_task(self.app['id'], self.task['info'])
+                err = self.client.create_task(self.project['id'], self.task['info'])
                 self.check_error_output(err_output, err)
 
     @patch('pbclient.requests.put')
@@ -112,7 +112,7 @@ class TestPybossaClientTask(TestPyBossaClient):
         Mock.return_value = self.create_fake_request(self.task, 200)
         task = self.client.update_task(pbclient.Task(self.task))
         assert task.id == self.task['id'], task
-        assert task.app_id == self.task['app_id'], task
+        assert task.project_id == self.task['project_id'], task
 
     @patch('pbclient.requests.put')
     def test_update_task_errors(self, Mock):

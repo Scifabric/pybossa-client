@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-"""
-    Dead simple pybossa client
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~
+"""Dead simple pybossa client.
 
-    A simple PyBossa client
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    :license: MIT
+A simple PyBossa client
+
+:license: MIT
 """
 
 _opts = dict()
@@ -15,15 +15,17 @@ import json
 
 
 def set(key, val):
+    """Set key to value."""
     global _opts
     _opts[key] = val
 
 
 def _pybossa_req(method, domain, id=None, payload=None, params=None):
     """
-    Sends a JSON request
+    Send a JSON request.
 
-    Returns True if everything went well, otherwise it returns the status code of the response
+    Returns True if everything went well, otherwise it returns the status
+    code of the response.
     """
     headers = {'content-type': 'application/json'}
     url = _opts['endpoint'] + '/api/' + domain
@@ -36,12 +38,15 @@ def _pybossa_req(method, domain, id=None, payload=None, params=None):
     if method == 'get':
         r = requests.get(url, params=params)
     elif method == 'post':
-        r = requests.post(url, params=params, headers=headers, data=json.dumps(payload))
+        r = requests.post(url, params=params, headers=headers,
+                          data=json.dumps(payload))
     elif method == 'put':
-        r = requests.put(url, params=params, headers=headers, data=json.dumps(payload))
+        r = requests.put(url, params=params, headers=headers,
+                         data=json.dumps(payload))
     elif method == 'delete':
-        r = requests.delete(url, params=params, headers=headers, data=json.dumps(payload))
-    #print r.status_code, r.status_code / 100
+        r = requests.delete(url, params=params, headers=headers,
+                            data=json.dumps(payload))
+    # print r.status_code, r.status_code / 100
     if r.status_code / 100 == 2:
         if r.text and r.text != '""':
             return json.loads(r.text)
@@ -51,13 +56,17 @@ def _pybossa_req(method, domain, id=None, payload=None, params=None):
         return json.loads(r.text)
 
 
-# app
+# project
 class DomainObject(object):
 
+    """Main Domain object Class."""
+
     def __init__(self, data):
+        """Init method."""
         self.__dict__['data'] = data
 
     def __getattr__(self, name):
+        """Get attribute."""
         data = self.__dict__['data']
         if name == 'data':
             return data
@@ -66,6 +75,7 @@ class DomainObject(object):
         raise AttributeError('unknown attribute: ' + name)
 
     def __setattr__(self, name, value):
+        """Set attribute."""
         data = self.__dict__['data']
         if name == 'data':
             self.__dict__['data'] = value
@@ -76,30 +86,49 @@ class DomainObject(object):
         raise AttributeError('unknown attribute: ' + name)
 
 
-class App(DomainObject):
-    def __repr__(self):
-        return 'pybossa.App("' + self.short_name + '", ' + str(self.id) + ')'
+class Project(DomainObject):
+
+    """Project class."""
+
+    def __repr__(self):  # pragma: no cover
+        """Return a representation."""
+        tmp = 'pybossa.Project("' + self.short_name + '", ' + str(self.id) + ')'
+        return tmp
 
 
 class Category(DomainObject):
-    def __repr__(self):
-        return 'pybossa.Category("' + self.short_name + '", ' + str(self.id) + ')'
+
+    """Category class."""
+
+    def __repr__(self):  # pragma: no cover
+        """Return a representation."""
+        tmp = ('pybossa.Category("' + self.short_name + '", '
+               + str(self.id) + ')')
+        return tmp
 
 
 class Task(DomainObject):
-    def __repr__(self):
+
+    """Task Class."""
+
+    def __repr__(self):  # pragma: no cover
+        """Return a represenation."""
         return 'pybossa.Task(' + str(self.id) + ')'
 
 
 class TaskRun(DomainObject):
-    def __repr__(self):
+
+    """Class TaskRun."""
+
+    def __repr__(self):  # pragma: no cover
+        """Return representation."""
         return 'pybossa.TaskRun(' + str(self.id) + ')'
 
 
-# Apps
+# Projects
 
-def get_apps(limit=100, offset=0):
-    """Returns a list of registered apps
+def get_projects(limit=100, offset=0):
+    """Return a list of registered projects.
 
     :param limit: Number of returned items, default 100
     :type limit: integer
@@ -107,121 +136,121 @@ def get_apps(limit=100, offset=0):
     :type offset: integer
 
     :rtype: list
-    :returns: A list of PyBossa Applications
+    :returns: A list of PyBossa Projects
 
     """
     try:
-        res = _pybossa_req('get', 'app', params=dict(limit=limit, offset=offset))
+        res = _pybossa_req('get', 'project',
+                           params=dict(limit=limit, offset=offset))
         if type(res).__name__ == 'list':
-            return [App(app) for app in res]
+            return [Project(project) for project in res]
         else:
-            return res
-    except:
+            raise TypeError
+    except:  # pragma: no cover
         raise
 
 
-def get_app(app_id):
-    """Returns a PyBossa Application for the app_id
+def get_project(project_id):
+    """Return a PyBossa Project for the project_id.
 
-    :param app_id: PyBossa Application ID
-    :type app_id: integer
-    :rtype: PyBossa Application
-    :returns: A PyBossa Application object
+    :param project_id: PyBossa Project ID
+    :type project_id: integer
+    :rtype: PyBossa Project
+    :returns: A PyBossa Project object
 
     """
     try:
-        res = _pybossa_req('get', 'app', app_id)
+        res = _pybossa_req('get', 'project', project_id)
         if res.get('id'):
-            return App(res)
+            return Project(res)
         else:
             return res
-    except:
+    except:  # pragma: no cover
         raise
 
 
-def find_app(**kwargs):
-    """Returns a list with matching app arguments
+def find_project(**kwargs):
+    """Return a list with matching project arguments.
 
-    :param kwargs: PyBossa Application members
+    :param kwargs: PyBossa Project members
     :rtype: list
-    :returns: A list of application that match the kwargs
+    :returns: A list of projects that match the kwargs
 
     """
     try:
-        res = _pybossa_req('get', 'app', params=kwargs)
+        res = _pybossa_req('get', 'project', params=kwargs)
         if type(res).__name__ == 'list':
-            return [App(app) for app in res]
+            return [Project(project) for project in res]
         else:
             return res
-    except:
+    except:  # pragma: no cover
         raise
 
 
-def create_app(name, short_name, description):
-    """Creates an application
+def create_project(name, short_name, description):
+    """Create a project.
 
-    :param name: PyBossa Application Name
+    :param name: PyBossa Project Name
     :type name: string
-    :param short_name: PyBossa Application short name or slug
+    :param short_name: PyBossa Project short name or slug
     :type short_name: string
-    :param description: PyBossa Application description
+    :param description: PyBossa Project description
     :type decription: string
     :returns: True -- the response status code
 
-
     """
     try:
-        app = dict(name=name, short_name=short_name, description=description)
-        res = _pybossa_req('post', 'app', payload=app)
+        project = dict(name=name, short_name=short_name,
+                       description=description)
+        res = _pybossa_req('post', 'project', payload=project)
         if res.get('id'):
-            return App(res)
+            return Project(res)
         else:
             return res
-    except:
+    except:  # pragma: no cover
         raise
 
 
-def update_app(app):
-    """Updates an application app instance
+def update_project(project):
+    """Update a project instance.
 
-    :param app: PyBossa Application
-    :type app: PyBossa Application
-    :returns: True -- the response status code
-
-
-    """
-    try:
-        res = _pybossa_req('put', 'app', app.id, payload=app.data)
-        if res.get('id'):
-            return App(res)
-        else:
-            return res
-    except:
-        raise
-
-
-def delete_app(app_id):
-    """Deletes an Application with id = app_id
-
-    :param app_id: PyBossa Application ID
-    :type app_id: integer
+    :param project: PyBossa project
+    :type project: PyBossa Project
     :returns: True -- the response status code
 
     """
     try:
-        res = _pybossa_req('delete', 'app', app_id)
+        res = _pybossa_req('put', 'project', project.id, payload=project.data)
+        if res.get('id'):
+            return Project(res)
+        else:
+            return res
+    except:  # pragma: no cover
+        raise
+
+
+def delete_project(project_id):
+    """Delete a Project with id = project_id.
+
+    :param project_id: PyBossa Project ID
+    :type project_id: integer
+    :returns: True -- the response status code
+
+    """
+    try:
+        res = _pybossa_req('delete', 'project', project_id)
         if type(res).__name__ == 'bool':
             return True
         else:
             return res
-    except:
+    except:  # pragma: no cover
         raise
 
 # Category
 
 
 def get_categories(limit=20, offset=0):
-    """Returns a list of registered categories
+    """Return a list of registered categories.
 
     :param limit: Number of returned items, default 20
     :type limit: integer
@@ -233,17 +262,18 @@ def get_categories(limit=20, offset=0):
 
     """
     try:
-        res = _pybossa_req('get', 'category', params=dict(limit=limit, offset=offset))
+        res = _pybossa_req('get', 'category',
+                           params=dict(limit=limit, offset=offset))
         if type(res).__name__ == 'list':
             return [Category(category) for category in res]
         else:
-            return res
+            raise TypeError
     except:
         raise
 
 
 def get_category(category_id):
-    """Returns a PyBossa Category for the category_id
+    """Return a PyBossa Category for the category_id.
 
     :param category_id: PyBossa Category ID
     :type category_id: integer
@@ -257,16 +287,16 @@ def get_category(category_id):
             return Category(res)
         else:
             return res
-    except:
+    except:  # pragma: no cover
         raise
 
 
 def find_category(**kwargs):
-    """Returns a list with matching Category arguments
+    """Return a list with matching Category arguments.
 
     :param kwargs: PyBossa Category members
     :rtype: list
-    :returns: A list of application that match the kwargs
+    :returns: A list of project that match the kwargs
 
     """
     try:
@@ -275,12 +305,12 @@ def find_category(**kwargs):
             return [Category(category) for category in res]
         else:
             return res
-    except:
+    except:  # pragma: no cover
         raise
 
 
 def create_category(name, description):
-    """Creates a Category
+    """Create a Category.
 
     :param name: PyBossa Category Name
     :type name: string
@@ -296,30 +326,31 @@ def create_category(name, description):
             return Category(res)
         else:
             return res
-    except:
+    except:  # pragma: no cover
         raise
 
 
 def update_category(category):
-    """Updates a Category instance
+    """Update a Category instance.
 
-    :param app: PyBossa Category
-    :type app: PyBossa Category
+    :param category: PyBossa Category
+    :type category: PyBossa Category
     :returns: True -- the response status code
 
     """
     try:
-        res = _pybossa_req('put', 'category', category.id, payload=category.data)
+        res = _pybossa_req('put', 'category',
+                           category.id, payload=category.data)
         if res.get('id'):
             return Category(res)
         else:
             return res
-    except:
+    except:  # pragma: no cover
         raise
 
 
 def delete_category(category_id):
-    """Deletes a Category with id = category_id
+    """Delete a Category with id = category_id.
 
     :param category_id: PyBossa Category ID
     :type category_id: integer
@@ -332,17 +363,17 @@ def delete_category(category_id):
             return True
         else:
             return res
-    except:
+    except:  # pragma: no cover
         raise
 
 
 # Tasks
 
-def get_tasks(app_id, limit=100, offset=0):
-    """Returns a list of tasks for a given application ID
+def get_tasks(project_id, limit=100, offset=0):
+    """Return a list of tasks for a given project ID.
 
-    :param app_id: PyBossa Application ID
-    :type app_id: integer
+    :param project_id: PyBossa Project ID
+    :type project_id: integer
     :param limit: Number of returned items, default 100
     :type limit: integer
     :param offset: Offset for the query, default 0
@@ -352,56 +383,58 @@ def get_tasks(app_id, limit=100, offset=0):
     """
     try:
         res = _pybossa_req('get', 'task',
-                           params=dict(app_id=app_id, limit=limit, offset=offset))
+                           params=dict(project_id=project_id,
+                                       limit=limit, offset=offset))
         if type(res).__name__ == 'list':
             return [Task(task) for task in res]
         else:
             return res
-    except:
+    except:  # pragma: no cover
         raise
 
 
-def find_tasks(app_id, **kwargs):
-    """Returns a list of matched tasks for a given application ID
+def find_tasks(project_id, **kwargs):
+    """Return a list of matched tasks for a given project ID.
 
-    :param app_id: PyBossa Application ID
-    :type app_id: integer
+    :param project_id: PyBossa Project ID
+    :type project_id: integer
     :param kwargs: PyBossa Task members
     :type info: dict
     :rtype: list
     :returns: A list of tasks that match the kwargs
 
     """
-
     try:
-        kwargs['app_id'] = app_id
+        kwargs['project_id'] = project_id
         res = _pybossa_req('get', 'task', params=kwargs)
         if type(res).__name__ == 'list':
             return [Task(task) for task in res]
         else:
             return res
-    except:
+    except:  # pragma: no cover
         raise
 
 
-def create_task(app_id, info, n_answers=30, priority_0=0, quorum=0):
-    """Creates a task for a given application ID
+def create_task(project_id, info, n_answers=30, priority_0=0, quorum=0):
+    """Create a task for a given project ID.
 
-    :param app_id: PyBossa Application ID
-    :type app_id: integer
-    :param info: PyBossa Application info JSON field
+    :param project_id: PyBossa Project ID
+    :type project_id: integer
+    :param info: PyBossa Project info JSON field
     :type info: dict
     :param n_answers: Number of answers or TaskRuns per task, default 30
     :type n_answers: integer
-    :param priority_0: Value between 0 and 1 indicating priority of task within App (higher = more important), default 0.0
+    :param priority_0: Value between 0 and 1 indicating priority of task within
+        Project (higher = more important), default 0.0
     :type priority_0: float
-    :param quorum: Number of times this task should be done by different users, default 0
+    :param quorum: Number of times this task should be done by different users,
+        default 0
     :type quorum: integer
     :returns: True -- the response status code
     """
     try:
         task = dict(
-            app_id=app_id,
+            project_id=project_id,
             info=info,
             state=0,
             calibration=0,
@@ -414,12 +447,12 @@ def create_task(app_id, info, n_answers=30, priority_0=0, quorum=0):
             return Task(res)
         else:
             return res
-    except:
+    except:  # pragma: no cover
         raise
 
 
 def update_task(task):
-    """Updates a task for a given task ID
+    """Update a task for a given task ID.
 
     :param task: PyBossa task
 
@@ -430,12 +463,12 @@ def update_task(task):
             return Task(res)
         else:
             return res
-    except:
+    except:  # pragma: no cover
         raise
 
 
 def delete_task(task_id):
-    """Deletes a task for a given task ID
+    """Delete a task for a given task ID.
 
     :param task: PyBossa task
 
@@ -447,59 +480,60 @@ def delete_task(task_id):
             return True
         else:
             return res
-    except:
+    except:  # pragma: no cover
         raise
 
 
 # Task Runs
 
-def get_taskruns(app_id, limit=100, offset=0):
-    """Returns a list of task runs for a given application ID
+def get_taskruns(project_id, limit=100, offset=0):
+    """Return a list of task runs for a given project ID.
 
-    :param app_id: PyBossa Application ID
-    :type app_id: integer
+    :param project_id: PyBossa Project ID
+    :type project_id: integer
     :param limit: Number of returned items, default 100
     :type limit: integer
     :param offset: Offset for the query, default 0
     :type offset: integer
     :rtype: list
-    :returns: A list of task runs for the given application ID
+    :returns: A list of task runs for the given project ID
 
     """
     try:
         res = _pybossa_req('get', 'taskrun',
-                           params=dict(app_id=app_id, limit=limit, offset=offset))
+                           params=dict(project_id=project_id,
+                                       limit=limit, offset=offset))
         if type(res).__name__ == 'list':
             return [TaskRun(taskrun) for taskrun in res]
         else:
-            return res
+            raise TypeError
     except:
         raise
 
 
-def find_taskruns(app_id, **kwargs):
-    """Returns a list of matched task runs for a given application ID
+def find_taskruns(project_id, **kwargs):
+    """Return a list of matched task runs for a given project ID.
 
-    :param app_id: PyBossa Application ID
-    :type app_id: integer
+    :param project_id: PyBossa Project ID
+    :type project_id: integer
     :param kwargs: PyBossa Task Run members
     :rtype: list
     :returns: A List of task runs that match the query members
 
     """
     try:
-        kwargs['app_id'] = app_id
+        kwargs['project_id'] = project_id
         res = _pybossa_req('get', 'taskrun', params=kwargs)
         if type(res).__name__ == 'list':
             return [TaskRun(taskrun) for taskrun in res]
         else:
             return res
-    except:
+    except:  # pragma: no cover
         raise
 
 
 def delete_taskrun(taskrun_id):
-    """Deletes the given taskrun
+    """Delete the given taskrun.
 
     :param task: PyBossa task
     """
@@ -509,5 +543,5 @@ def delete_taskrun(taskrun_id):
             return True
         else:
             return res
-    except:
+    except:  # pragma: no cover
         raise

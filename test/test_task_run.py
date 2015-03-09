@@ -16,13 +16,14 @@
 
 from mock import patch
 from base import TestPyBossaClient
+from nose.tools import assert_raises
 
 
 class TestPybossaClientTaskRun(TestPyBossaClient):
     @patch('pbclient.requests.delete')
-    def test_app_task_taskrun_delete(self, Mock):
-        """Test delete app, task and taskrun errors works"""
-        targets = ['app', 'task', 'taskrun']
+    def test_project_task_taskrun_delete(self, Mock):
+        """Test delete project, task and taskrun errors works"""
+        targets = ['project', 'task', 'taskrun']
         errors = {'Unauthorized': 401, 'NotFound': 404, 'Forbidden': 401}
         for target in targets:
             for error in errors.keys():
@@ -32,33 +33,40 @@ class TestPybossaClientTaskRun(TestPyBossaClient):
                                                       exception_cls=error)
                 Mock.return_value = self.create_fake_request(err_output,
                                                              errors[error])
-                if target == 'app':
-                    err = self.client.delete_app(1)
+                if target == 'project':
+                    err = self.client.delete_project(1)
                 if target == 'task':
                     err = self.client.delete_task(1)
                 if target == 'taskrun':
-                    err = self.client.delete_task(1)
+                    err = self.client.delete_taskrun(1)
                 self.check_error_output(err_output, err)
 
     @patch('pbclient.requests.get')
     def test_get_taskruns(self, Mock):
         """Test get_taskruns works"""
         Mock.return_value = self.create_fake_request([self.taskrun], 200)
-        res = self.client.get_tasks(1)
+        res = self.client.get_taskruns(1)
         assert len(res) == 1, len(res)
         taskrun = res[0]
         assert taskrun.id == self.taskrun['id'], taskrun
-        assert taskrun.app_id == self.taskrun['app_id'], taskrun
+        assert taskrun.project_id == self.taskrun['project_id'], taskrun
+
+    @patch('pbclient.requests.get')
+    def test_get_taskruns_error(self, Mock):
+        """Test get_taskruns error works"""
+        Mock.return_value = self.create_fake_request(self.taskrun, 200)
+        assert_raises(TypeError, self.client.get_taskruns, 1)
+
 
     @patch('pbclient.requests.get')
     def test_find_taskruns(self, Mock):
         """Test find_taskruns works"""
         Mock.return_value = self.create_fake_request([self.taskrun], 200)
-        res = self.client.find_taskruns(app_id=1)
+        res = self.client.find_taskruns(project_id=1)
         assert len(res) == 1, len(res)
         taskrun = res[0]
         assert taskrun.id == self.taskrun['id'], taskrun
-        assert taskrun.app_id == self.taskrun['app_id'], taskrun
+        assert taskrun.project_id == self.taskrun['project_id'], taskrun
 
     @patch('pbclient.requests.get')
     def test_find_taskruns_errors(self, Mock):
