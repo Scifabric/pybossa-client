@@ -25,30 +25,30 @@ Setup::
     pbclient.set('endpoint', 'http://pybossa.com')
     pbclient.set('api_key', '--your-api-key-here--')
 
-Create an application::
+Create an project::
 
-    pbclient.create_app('Name of the App', 'shortname', 'Description')
+    pbclient.create_project('Name of the Project', 'shortname', 'Description')
 
-Change the long description of an app::
+Change the long description of a project::
 
-    app = pbclient.find_app(short_name='flickrperson')[0]
-    app.long_description = open('longdesc.html').read()
+    project = pbclient.find_project(short_name='flickrperson')[0]
+    project.long_description = open('longdesc.html').read()
     
-    pbclient.update_app(app)
+    pbclient.update_project(project)
 
 Replace the task presenter template::
 
-    app = pbclient.find_app(short_name='flickrperson')[0]
-    app.info['task_presenter'] = open('presenter.html').read()
+    project = pbclient.find_project(short_name='flickrperson')[0]
+    project.info['task_presenter'] = open('presenter.html').read()
     
-    pbclient.update_app(app)
+    pbclient.update_project(project)
 
 Create a new task::
 
     task_info = {
         'image': 'http://farm9.staticflickr.com/8146/7566819662_f2c74e77d8_m.jpg'
     }
-    pbclient.create_task(app_id, task_info)
+    pbclient.create_task(project_id, task_info)
 
 **Note**: Categories actions POST, PUT and DELETE are only authorized to
 admin users.
