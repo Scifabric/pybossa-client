@@ -467,7 +467,9 @@ def update_task(task):
 
     """
     try:
-        res = _pybossa_req('put', 'task', task.id, payload=task.data)
+        task_id = task.id
+        task = _forbidden_attributes(task)
+        res = _pybossa_req('put', 'task', task_id, payload=task.data)
         if res.get('id'):
             return Task(res)
         else:
