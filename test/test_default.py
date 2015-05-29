@@ -57,10 +57,19 @@ class TestPybossaClientDefaults(TestPyBossaClient):
         obj = pbclient.DomainObject(data)
         assert_raises(AttributeError, getattr, obj, 'nonething')
 
-    def test_forbidden_attributes(self):
+    def test_forbidden_attributes_projects(self):
         data = {'id': 1, 'name': 'name', 'short_name': 'short_name',
                 'created': 'today', 'updated': 'today', 'completed': False,
                 'contacted': False}
+        project = pbclient.Project(data)
+        for key in data.keys():
+            assert key in project.data.keys()
+        new_project = pbclient._forbidden_attributes(project)
+        for key in project.reserved_keys.keys():
+            assert key not in new_project.data.keys()
+
+    def test_forbidden_attributes_tasks(self):
+        data = {'id': 1, 'created': 'today', 'state': False}
         project = pbclient.Project(data)
         for key in data.keys():
             assert key in project.data.keys()
