@@ -166,9 +166,10 @@ class TestPybossaClientProject(TestPyBossaClient):
     def test_08_update_project(self, Mock):
         """Test update_project works"""
         Mock.return_value = self.create_fake_request(self.project, 200)
-        project = self.client.update_project(pbclient.Project(self.project))
-        assert project.id == self.project['id'], project
-        assert project.short_name == self.project['short_name'], project
+        project = pbclient.Project(self.project.copy())
+        u_project = self.client.update_project(project)
+        assert u_project.id == self.project['id'], project
+        assert u_project.short_name == self.project['short_name'], project
 
     @patch('pbclient.requests.put')
     def test_09_update_project_not_found(self, Mock):
@@ -176,7 +177,7 @@ class TestPybossaClientProject(TestPyBossaClient):
         not_found = self.create_error_output(action='PUT', status_code=404,
                                              target='project', exception_cls='NotFound')
         Mock.return_value = self.create_fake_request(not_found, 404)
-        err = self.client.update_project(pbclient.Project(self.project))
+        err = self.client.update_project(pbclient.Project(self.project.copy()))
         self.check_error_output(not_found, err)
 
     @patch('pbclient.requests.put')
@@ -185,7 +186,8 @@ class TestPybossaClientProject(TestPyBossaClient):
         forbidden = self.create_error_output(action='PUT', status_code=403,
                                              target='project', exception_cls='Forbidden')
         Mock.return_value = self.create_fake_request(forbidden, 403)
-        err = self.client.update_project(pbclient.Project(self.project))
+        project = pbclient.Project(self.project.copy())
+        err = self.client.update_project(project)
         self.check_error_output(forbidden, err)
 
     @patch('pbclient.requests.put')
@@ -194,7 +196,8 @@ class TestPybossaClientProject(TestPyBossaClient):
         unauthorized = self.create_error_output(action='PUT', status_code=401,
                                                 target='project', exception_cls='Unauthorized')
         Mock.return_value = self.create_fake_request(unauthorized, 401)
-        err = self.client.update_project(pbclient.Project(self.project))
+        project = pbclient.Project(self.project.copy())
+        err = self.client.update_project(project)
         self.check_error_output(unauthorized, err)
 
     @patch('pbclient.requests.delete')
