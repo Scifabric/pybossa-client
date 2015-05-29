@@ -119,7 +119,7 @@ class TestPybossaClientTask(TestPyBossaClient):
         """Test update task errors works"""
         targets = ['task']
         errors = {'Unauthorized': 401, 'NotFound': 404, 'Forbidden': 401,
-                  'TypeError': 415}
+                  'TypeError': 415, 'BadRequest': 400}
         for target in targets:
             for error in errors.keys():
                 err_output = self.create_error_output(action='POST',
