@@ -172,6 +172,17 @@ class TestPybossaClientProject(TestPyBossaClient):
         assert u_project.short_name == self.project['short_name'], project
 
     @patch('pbclient.requests.put')
+    def test_update_project_400(self, Mock):
+        """Test update_project does not allow reserved attributes works"""
+        bad_request= self.create_error_output(action='PUT',
+                                              status_code=400,
+                                              target='project',
+                                              exception_cls='BadRequest')
+        Mock.return_value = self.create_fake_request(bad_request, 400)
+        err = self.client.update_project(pbclient.Project(self.project.copy()))
+        self.check_error_output(bad_request, err)
+
+    @patch('pbclient.requests.put')
     def test_09_update_project_not_found(self, Mock):
         """Test update_project not found works"""
         not_found = self.create_error_output(action='PUT', status_code=404,
