@@ -30,7 +30,7 @@ class TestPybossaClientTask(TestPyBossaClient):
     @patch('pbclient.requests.get')
     def test_get_tasks(self, Mock):
         """Test get_tasks works"""
-        Mock.return_value = self.create_fake_request([self.task], 200)
+        Mock.return_value = self.create_fake_request([self.task.copy()], 200)
         res = self.client.get_tasks(1)
         assert len(res) == 1, len(res)
         task = res[0]
@@ -57,7 +57,7 @@ class TestPybossaClientTask(TestPyBossaClient):
     @patch('pbclient.requests.get')
     def test_find_tasks(self, Mock):
         """Test find_tasks works"""
-        Mock.return_value = self.create_fake_request([self.task], 200)
+        Mock.return_value = self.create_fake_request([self.task.copy()], 200)
         res = self.client.find_tasks(project_id=1)
         assert len(res) == 1, len(res)
         task = res[0]
@@ -84,7 +84,7 @@ class TestPybossaClientTask(TestPyBossaClient):
     @patch('pbclient.requests.post')
     def test_create_task(self, Mock):
         """Test create_task works"""
-        Mock.return_value = self.create_fake_request(self.task, 200)
+        Mock.return_value = self.create_fake_request(self.task.copy(), 200)
         task = self.client.create_task(self.project['id'], self.task['info'])
         assert task.id == self.task['id'], task
         assert task.project_id == self.task['project_id'], task
@@ -110,7 +110,7 @@ class TestPybossaClientTask(TestPyBossaClient):
     def test_update_task(self, Mock):
         """Test update_task works"""
         Mock.return_value = self.create_fake_request(self.task, 200)
-        task = self.client.update_task(pbclient.Task(self.task))
+        task = self.client.update_task(pbclient.Task(self.task.copy()))
         assert task.id == self.task['id'], task
         assert task.project_id == self.task['project_id'], task
 
@@ -128,5 +128,5 @@ class TestPybossaClientTask(TestPyBossaClient):
                                                       exception_cls=error)
                 Mock.return_value = self.create_fake_request(err_output,
                                                              errors[error])
-                err = self.client.update_task(pbclient.Task(self.task))
+                err = self.client.update_task(pbclient.Task(self.task.copy()))
                 self.check_error_output(err_output, err)
