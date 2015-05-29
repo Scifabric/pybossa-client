@@ -90,6 +90,9 @@ class Project(DomainObject):
 
     """Project class."""
 
+    reserved_keys = dict(id=None, created=None, updated=None,
+                         completed=None, contacted=None)
+
     def __repr__(self):  # pragma: no cover
         """Return a representation."""
         tmp = 'pybossa.Project("' + self.short_name + '", ' + str(self.id) + ')'
@@ -111,6 +114,8 @@ class Task(DomainObject):
 
     """Task Class."""
 
+    reserved_keys = dict(id=None, created=None, state=None)
+
     def __repr__(self):  # pragma: no cover
         """Return a represenation."""
         return 'pybossa.Task(' + str(self.id) + ')'
@@ -119,6 +124,8 @@ class Task(DomainObject):
 class TaskRun(DomainObject):
 
     """Class TaskRun."""
+
+    reserved_keys = dict(id=None, created=None, finish_time=None)
 
     def __repr__(self):  # pragma: no cover
         """Return representation."""
@@ -220,7 +227,9 @@ def update_project(project):
 
     """
     try:
-        res = _pybossa_req('put', 'project', project.id, payload=project.data)
+        project_id = project.id
+        project = _forbidden_attributes(project)
+        res = _pybossa_req('put', 'project', project_id, payload=project.data)
         if res.get('id'):
             return Project(res)
         else:
@@ -458,7 +467,9 @@ def update_task(task):
 
     """
     try:
-        res = _pybossa_req('put', 'task', task.id, payload=task.data)
+        task_id = task.id
+        task = _forbidden_attributes(task)
+        res = _pybossa_req('put', 'task', task_id, payload=task.data)
         if res.get('id'):
             return Task(res)
         else:
@@ -545,3 +556,11 @@ def delete_taskrun(taskrun_id):
             return res
     except:  # pragma: no cover
         raise
+
+
+def _forbidden_attributes(obj):
+    """Return the object without the forbidden attributes."""
+    for key in obj.data.keys():
+        if key in obj.reserved_keys.keys():
+            obj.data.pop(key)
+    return obj

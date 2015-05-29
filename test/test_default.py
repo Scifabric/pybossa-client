@@ -56,3 +56,32 @@ class TestPybossaClientDefaults(TestPyBossaClient):
         data = {'foo': 'bar'}
         obj = pbclient.DomainObject(data)
         assert_raises(AttributeError, getattr, obj, 'nonething')
+
+    def test_forbidden_attributes_projects(self):
+        data = {'id': 1, 'name': 'name', 'short_name': 'short_name',
+                'created': 'today', 'updated': 'today', 'completed': False,
+                'contacted': False}
+        project = pbclient.Project(data)
+        for key in data.keys():
+            assert key in project.data.keys()
+        new_project = pbclient._forbidden_attributes(project)
+        for key in project.reserved_keys.keys():
+            assert key not in new_project.data.keys()
+
+    def test_forbidden_attributes_tasks(self):
+        data = {'id': 1, 'created': 'today', 'state': False}
+        task = pbclient.Task(data)
+        for key in data.keys():
+            assert key in task.data.keys()
+        new_task = pbclient._forbidden_attributes(task)
+        for key in task.reserved_keys.keys():
+            assert key not in new_task.data.keys()
+
+    def test_forbidden_attributes_task_runs(self):
+        data = {'id': 1, 'created': 'today', 'finish_time': 'today'}
+        taskrun = pbclient.TaskRun(data)
+        for key in data.keys():
+            assert key in taskrun.data.keys()
+        new_taskrun = pbclient._forbidden_attributes(taskrun)
+        for key in taskrun.reserved_keys.keys():
+            assert key not in new_taskrun.data.keys()
