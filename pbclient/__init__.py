@@ -226,6 +226,8 @@ def update_project(project):
 
     """
     try:
+        project_id = project.id
+
         res = _pybossa_req('put', 'project', project.id, payload=project.data)
         if res.get('id'):
             return Project(res)
@@ -551,3 +553,11 @@ def delete_taskrun(taskrun_id):
             return res
     except:  # pragma: no cover
         raise
+
+
+def _forbidden_attributes(obj):
+    """Return the object without the forbidden attributes."""
+    for key in obj.keys():
+        if key in obj.reserved_keys:
+            obj.data.pop(key)
+    return obj
