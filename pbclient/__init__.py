@@ -90,6 +90,8 @@ class Project(DomainObject):
 
     """Project class."""
 
+    reserved_keys = set(['id', 'created', 'updated', 'completed', 'contacted'])
+
     def __repr__(self):  # pragma: no cover
         """Return a representation."""
         tmp = 'pybossa.Project("' + self.short_name + '", ' + str(self.id) + ')'
@@ -111,6 +113,8 @@ class Task(DomainObject):
 
     """Task Class."""
 
+    reserved_keys = set(['id', 'created', 'state'])
+
     def __repr__(self):  # pragma: no cover
         """Return a represenation."""
         return 'pybossa.Task(' + str(self.id) + ')'
@@ -119,6 +123,8 @@ class Task(DomainObject):
 class TaskRun(DomainObject):
 
     """Class TaskRun."""
+
+    reserved_keys = set(['id', 'created', 'finish_time'])
 
     def __repr__(self):  # pragma: no cover
         """Return representation."""
