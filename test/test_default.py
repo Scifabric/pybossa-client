@@ -70,7 +70,16 @@ class TestPybossaClientDefaults(TestPyBossaClient):
 
     def test_forbidden_attributes_tasks(self):
         data = {'id': 1, 'created': 'today', 'state': False}
-        project = pbclient.Project(data)
+        project = pbclient.Task(data)
+        for key in data.keys():
+            assert key in project.data.keys()
+        new_project = pbclient._forbidden_attributes(project)
+        for key in project.reserved_keys.keys():
+            assert key not in new_project.data.keys()
+
+    def test_forbidden_attributes_task_runs(self):
+        data = {'id': 1, 'created': 'today', 'finish_time': 'today'}
+        project = pbclient.TaskRun(data)
         for key in data.keys():
             assert key in project.data.keys()
         new_project = pbclient._forbidden_attributes(project)
