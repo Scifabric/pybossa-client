@@ -445,7 +445,6 @@ def create_task(project_id, info, n_answers=30, priority_0=0, quorum=0):
         task = dict(
             project_id=project_id,
             info=info,
-            state=0,
             calibration=0,
             priority_0=priority_0,
             n_answers=n_answers,
