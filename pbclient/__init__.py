@@ -13,6 +13,11 @@ _opts = dict()
 import requests
 import json
 
+OFFSET_WARNING = """
+    INFO: you can use keyset pagination to get faster responses from the server.
+    To learn more, please visit: https://github.com/PyBossa/pybossa-client#usage
+    """
+
 
 def set(key, val):
     """Set key to value."""
@@ -146,6 +151,7 @@ def get_projects(limit=100, offset=0, last_id=None):
     if last_id is not None:
         params = dict(limit=limit, last_id=last_id)
     else:
+        print OFFSET_WARNING
         params = dict(limit=limit, offset=offset)
     try:
         res = _pybossa_req('get', 'project',
@@ -276,6 +282,7 @@ def get_categories(limit=20, offset=0, last_id=None):
         params = dict(limit=limit, last_id=last_id)
     else:
         params = dict(limit=limit, offset=offset)
+        print OFFSET_WARNING
     try:
         res = _pybossa_req('get', 'category',
                            params=params)
@@ -402,6 +409,7 @@ def get_tasks(project_id, limit=100, offset=0, last_id=None):
         params = dict(limit=limit, last_id=last_id)
     else:
         params = dict(limit=limit, offset=offset)
+        print OFFSET_WARNING
     params['project_id'] = project_id
     try:
         res = _pybossa_req('get', 'task',
@@ -527,6 +535,7 @@ def get_taskruns(project_id, limit=100, offset=0, last_id=None):
         params = dict(limit=limit, last_id=last_id)
     else:
         params = dict(limit=limit, offset=offset)
+        print OFFSET_WARNING
     params['project_id'] = project_id
     try:
         res = _pybossa_req('get', 'taskrun',
