@@ -20,7 +20,7 @@ def set(key, val):
     _opts[key] = val
 
 
-def _pybossa_req(method, domain, id=None, payload=None, params=None):
+def _pybossa_req(method, domain, id=None, payload=None, params={}):
     """
     Send a JSON request.
 
@@ -31,8 +31,6 @@ def _pybossa_req(method, domain, id=None, payload=None, params=None):
     url = _opts['endpoint'] + '/api/' + domain
     if id is not None:
         url += '/' + str(id)
-    if params is None:
-        params = dict()
     if 'api_key' in _opts:
         params['api_key'] = _opts['api_key']
     if method == 'get':
@@ -46,7 +44,6 @@ def _pybossa_req(method, domain, id=None, payload=None, params=None):
     elif method == 'delete':
         r = requests.delete(url, params=params, headers=headers,
                             data=json.dumps(payload))
-    # print r.status_code, r.status_code / 100
     if r.status_code / 100 == 2:
         if r.text and r.text != '""':
             return json.loads(r.text)
@@ -56,7 +53,6 @@ def _pybossa_req(method, domain, id=None, payload=None, params=None):
         return json.loads(r.text)
 
 
-# project
 class DomainObject(object):
 
     """Main Domain object Class."""
