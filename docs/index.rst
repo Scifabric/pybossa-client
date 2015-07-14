@@ -46,28 +46,28 @@ Query a PyBossa server::
 
 Create a project::
 
-    pbclient.create_project('Name of the Project', 'shortname', 'Description')
+    >>> pbclient.create_project('Name of the Project', 'shortname', 'Description')
 
 Change the long description of a project::
 
-    project = pbclient.find_project(short_name='flickrperson')[0]
-    project.long_description = open('longdesc.html').read()
+    >>> project = pbclient.find_project(short_name='flickrperson')[0]
+    >>> project.long_description = open('longdesc.html').read()
     
-    pbclient.update_project(project)
+    >>> pbclient.update_project(project)
 
 Replace the task presenter template::
 
-    project = pbclient.find_project(short_name='flickrperson')[0]
-    project.info['task_presenter'] = open('presenter.html').read()
+    >>> project = pbclient.find_project(short_name='flickrperson')[0]
+    >>> project.info['task_presenter'] = open('presenter.html').read()
     
-    pbclient.update_project(project)
+    >>> pbclient.update_project(project)
 
 Create a new task::
 
-    task_info = {
+    >>> task_info = {
         'image': 'http://farm9.staticflickr.com/8146/7566819662_f2c74e77d8_m.jpg'
     }
-    pbclient.create_task(project_id, task_info)
+    >>> pbclient.create_task(project_id, task_info)
 
 **Note**: Categories actions POST, PUT and DELETE are only authorized to
 admin users.
@@ -101,7 +101,6 @@ To obtain the same results as in the previous example::
     [pybossa.Project("project3", 3), pybossa.Project("project4", 4)]
 
     >>> projects == projects_with_last_id
-
     True
 
 Module overview
