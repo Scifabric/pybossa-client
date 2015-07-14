@@ -6,7 +6,7 @@
 Welcome to pybossa-client's documentation!
 ==========================================
 
-This small library will help you to create and manage your applications in
+This small library will help you to create and manage your projects in
 a `PyBossa server <http://pybossa.com>`_.
 
 Install
@@ -28,23 +28,23 @@ Setup::
     pbclient.set('endpoint', 'http://pybossa.com')
     pbclient.set('api_key', '--your-api-key-here--')
 
-Create an application::
+Create a project::
 
-    pbclient.create_app('Name of the App', 'shortname', 'Description')
+    pbclient.create_project('Name of the Project', 'shortname', 'Description')
 
-Change the long description of an app::
+Change the long description of a project::
 
-    app = pbclient.find_app(short_name='flickrperson')
-    app.long_description = open('longdesc.html').read()
+    project = pbclient.find_project(short_name='flickrperson')
+    project.long_description = open('longdesc.html').read()
     
-    pbclient.update_app(app)
+    pbclient.update_project(project)
 
 Create a new task::
 
     task_info = {
         'image': 'http://farm9.staticflickr.com/8146/7566819662_f2c74e77d8_m.jpg'
     }
-    pbclient.create_task(app_id, task_info)
+    pbclient.create_task(project_id, task_info)
 
 .. note::
     The Category methods POST, PUT and DELETE are only allowed to **PyBossa
