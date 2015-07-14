@@ -137,7 +137,8 @@ def get_projects(limit=100, offset=0, last_id=None):
     :type limit: integer
     :param offset: Offset for the query, default 0
     :type offset: integer
-
+    :param last_id: id of the last project, used for pagination. If provided, offset is ignored
+    :type last_id: integer
     :rtype: list
     :returns: A list of PyBossa Projects
 
@@ -255,8 +256,8 @@ def delete_project(project_id):
     except:  # pragma: no cover
         raise
 
-# Category
 
+# Category
 
 def get_categories(limit=20, offset=0, last_id=None):
     """Return a list of registered categories.
@@ -265,7 +266,8 @@ def get_categories(limit=20, offset=0, last_id=None):
     :type limit: integer
     :param offset: Offset for the query, default 0
     :type offset: integer
-
+    :param last_id: id of the last category, used for pagination. If provided, offset is ignored
+    :type last_id: integer
     :rtype: list
     :returns: A list of PyBossa Categories
 
@@ -390,6 +392,8 @@ def get_tasks(project_id, limit=100, offset=0, last_id=None):
     :param limit: Number of returned items, default 100
     :type limit: integer
     :param offset: Offset for the query, default 0
+    :param last_id: id of the last task, used for pagination. If provided, offset is ignored
+    :type last_id: integer
     :type offset: integer
     :returns: True -- the response status code
 
@@ -513,6 +517,8 @@ def get_taskruns(project_id, limit=100, offset=0, last_id=None):
     :type limit: integer
     :param offset: Offset for the query, default 0
     :type offset: integer
+    :param last_id: id of the last taskrun, used for pagination. If provided, offset is ignored
+    :type last_id: integer
     :rtype: list
     :returns: A list of task runs for the given project ID
 
