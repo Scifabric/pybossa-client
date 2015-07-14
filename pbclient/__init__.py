@@ -15,7 +15,8 @@ import json
 
 OFFSET_WARNING = """
     INFO: you can use keyset pagination to get faster responses from the server.
-    To learn more, please visit: https://github.com/PyBossa/pybossa-client#usage
+    To learn more, please visit:
+    https://github.com/PyBossa/pybossa-client#on-queries-and-performance
     """
 
 
