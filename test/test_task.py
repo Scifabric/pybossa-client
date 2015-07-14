@@ -21,7 +21,7 @@ from base import TestPyBossaClient
 
 class TestPybossaClientTask(TestPyBossaClient):
     @patch('pbclient.requests.delete')
-    def test_13_delete_task(self, Mock):
+    def test_delete_task(self, Mock):
         """Test delete_task works"""
         Mock.return_value = self.create_fake_request('', 204, 'text/html')
         res = self.client.delete_task(1)
@@ -36,6 +36,19 @@ class TestPybossaClientTask(TestPyBossaClient):
         task = res[0]
         assert task.id == self.task['id'], task
         assert task.project_id == self.task['project_id'], task
+
+    @patch('pbclient.requests.get')
+    def test_get_tasks_with_keyset_pagination(self, Mock):
+        """Test get_tasks uses keyset pagination if a last_id argument is
+        provided"""
+        Mock.return_value = self.create_fake_request([], 200)
+        self.client.get_tasks(1, last_id=1, limit=3)
+
+        Mock.assert_called_once_with('http://localhost:5000/api/task',
+                                     params={'api_key': 'key',
+                                             'project_id': 1,
+                                             'limit': 3,
+                                             'last_id': 1})
 
     @patch('pbclient.requests.get')
     def test_get_tasks_errors(self, Mock):

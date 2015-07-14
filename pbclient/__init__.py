@@ -130,7 +130,7 @@ class TaskRun(DomainObject):
 
 # Projects
 
-def get_projects(limit=100, offset=0):
+def get_projects(limit=100, offset=0, last_id=None):
     """Return a list of registered projects.
 
     :param limit: Number of returned items, default 100
@@ -142,9 +142,13 @@ def get_projects(limit=100, offset=0):
     :returns: A list of PyBossa Projects
 
     """
+    if last_id is not None:
+        params = dict(limit=limit, last_id=last_id)
+    else:
+        params = dict(limit=limit, offset=offset)
     try:
         res = _pybossa_req('get', 'project',
-                           params=dict(limit=limit, offset=offset))
+                           params=params)
         if type(res).__name__ == 'list':
             return [Project(project) for project in res]
         else:
@@ -254,7 +258,7 @@ def delete_project(project_id):
 # Category
 
 
-def get_categories(limit=20, offset=0):
+def get_categories(limit=20, offset=0, last_id=None):
     """Return a list of registered categories.
 
     :param limit: Number of returned items, default 20
@@ -266,9 +270,13 @@ def get_categories(limit=20, offset=0):
     :returns: A list of PyBossa Categories
 
     """
+    if last_id is not None:
+        params = dict(limit=limit, last_id=last_id)
+    else:
+        params = dict(limit=limit, offset=offset)
     try:
         res = _pybossa_req('get', 'category',
-                           params=dict(limit=limit, offset=offset))
+                           params=params)
         if type(res).__name__ == 'list':
             return [Category(category) for category in res]
         else:
@@ -374,7 +382,7 @@ def delete_category(category_id):
 
 # Tasks
 
-def get_tasks(project_id, limit=100, offset=0):
+def get_tasks(project_id, limit=100, offset=0, last_id=None):
     """Return a list of tasks for a given project ID.
 
     :param project_id: PyBossa Project ID
@@ -386,10 +394,14 @@ def get_tasks(project_id, limit=100, offset=0):
     :returns: True -- the response status code
 
     """
+    if last_id is not None:
+        params = dict(limit=limit, last_id=last_id)
+    else:
+        params = dict(limit=limit, offset=offset)
+    params['project_id'] = project_id
     try:
         res = _pybossa_req('get', 'task',
-                           params=dict(project_id=project_id,
-                                       limit=limit, offset=offset))
+                           params=params)
         if type(res).__name__ == 'list':
             return [Task(task) for task in res]
         else:
@@ -492,7 +504,7 @@ def delete_task(task_id):
 
 # Task Runs
 
-def get_taskruns(project_id, limit=100, offset=0):
+def get_taskruns(project_id, limit=100, offset=0, last_id=None):
     """Return a list of task runs for a given project ID.
 
     :param project_id: PyBossa Project ID
@@ -505,10 +517,14 @@ def get_taskruns(project_id, limit=100, offset=0):
     :returns: A list of task runs for the given project ID
 
     """
+    if last_id is not None:
+        params = dict(limit=limit, last_id=last_id)
+    else:
+        params = dict(limit=limit, offset=offset)
+    params['project_id'] = project_id
     try:
         res = _pybossa_req('get', 'taskrun',
-                           params=dict(project_id=project_id,
-                                       limit=limit, offset=offset))
+                           params=params)
         if type(res).__name__ == 'list':
             return [TaskRun(taskrun) for taskrun in res]
         else:
