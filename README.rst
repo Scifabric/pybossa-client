@@ -56,3 +56,14 @@ Create a new task::
 
 **Note**: Categories actions POST, PUT and DELETE are only authorized to
 admin users.
+
+Running the tests
+-----------------
+
+Install the develompment requirements::
+
+    $ pip install -r requirements-dev.txt
+
+Run the tests::
+
+    $ nosetests
