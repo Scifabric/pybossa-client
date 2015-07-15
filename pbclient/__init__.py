@@ -13,6 +13,12 @@ _opts = dict()
 import requests
 import json
 
+OFFSET_WARNING = """
+    INFO: you can use keyset pagination to get faster responses from the server.
+    To learn more, please visit:
+    https://github.com/PyBossa/pybossa-client#on-queries-and-performance
+    """
+
 
 def set(key, val):
     """Set key to value."""
@@ -20,7 +26,7 @@ def set(key, val):
     _opts[key] = val
 
 
-def _pybossa_req(method, domain, id=None, payload=None, params=None):
+def _pybossa_req(method, domain, id=None, payload=None, params={}):
     """
     Send a JSON request.
 
@@ -31,8 +37,6 @@ def _pybossa_req(method, domain, id=None, payload=None, params=None):
     url = _opts['endpoint'] + '/api/' + domain
     if id is not None:
         url += '/' + str(id)
-    if params is None:
-        params = dict()
     if 'api_key' in _opts:
         params['api_key'] = _opts['api_key']
     if method == 'get':
@@ -46,7 +50,6 @@ def _pybossa_req(method, domain, id=None, payload=None, params=None):
     elif method == 'delete':
         r = requests.delete(url, params=params, headers=headers,
                             data=json.dumps(payload))
-    # print r.status_code, r.status_code / 100
     if r.status_code / 100 == 2:
         if r.text and r.text != '""':
             return json.loads(r.text)
@@ -56,7 +59,6 @@ def _pybossa_req(method, domain, id=None, payload=None, params=None):
         return json.loads(r.text)
 
 
-# project
 class DomainObject(object):
 
     """Main Domain object Class."""
@@ -134,21 +136,27 @@ class TaskRun(DomainObject):
 
 # Projects
 
-def get_projects(limit=100, offset=0):
+def get_projects(limit=100, offset=0, last_id=None):
     """Return a list of registered projects.
 
     :param limit: Number of returned items, default 100
     :type limit: integer
     :param offset: Offset for the query, default 0
     :type offset: integer
-
+    :param last_id: id of the last project, used for pagination. If provided, offset is ignored
+    :type last_id: integer
     :rtype: list
     :returns: A list of PyBossa Projects
 
     """
+    if last_id is not None:
+        params = dict(limit=limit, last_id=last_id)
+    else:
+        print OFFSET_WARNING
+        params = dict(limit=limit, offset=offset)
     try:
         res = _pybossa_req('get', 'project',
-                           params=dict(limit=limit, offset=offset))
+                           params=params)
         if type(res).__name__ == 'list':
             return [Project(project) for project in res]
         else:
@@ -255,24 +263,30 @@ def delete_project(project_id):
     except:  # pragma: no cover
         raise
 
+
 # Category
 
-
-def get_categories(limit=20, offset=0):
+def get_categories(limit=20, offset=0, last_id=None):
     """Return a list of registered categories.
 
     :param limit: Number of returned items, default 20
     :type limit: integer
     :param offset: Offset for the query, default 0
     :type offset: integer
-
+    :param last_id: id of the last category, used for pagination. If provided, offset is ignored
+    :type last_id: integer
     :rtype: list
     :returns: A list of PyBossa Categories
 
     """
+    if last_id is not None:
+        params = dict(limit=limit, last_id=last_id)
+    else:
+        params = dict(limit=limit, offset=offset)
+        print OFFSET_WARNING
     try:
         res = _pybossa_req('get', 'category',
-                           params=dict(limit=limit, offset=offset))
+                           params=params)
         if type(res).__name__ == 'list':
             return [Category(category) for category in res]
         else:
@@ -378,7 +392,7 @@ def delete_category(category_id):
 
 # Tasks
 
-def get_tasks(project_id, limit=100, offset=0):
+def get_tasks(project_id, limit=100, offset=0, last_id=None):
     """Return a list of tasks for a given project ID.
 
     :param project_id: PyBossa Project ID
@@ -386,14 +400,21 @@ def get_tasks(project_id, limit=100, offset=0):
     :param limit: Number of returned items, default 100
     :type limit: integer
     :param offset: Offset for the query, default 0
+    :param last_id: id of the last task, used for pagination. If provided, offset is ignored
+    :type last_id: integer
     :type offset: integer
     :returns: True -- the response status code
 
     """
+    if last_id is not None:
+        params = dict(limit=limit, last_id=last_id)
+    else:
+        params = dict(limit=limit, offset=offset)
+        print OFFSET_WARNING
+    params['project_id'] = project_id
     try:
         res = _pybossa_req('get', 'task',
-                           params=dict(project_id=project_id,
-                                       limit=limit, offset=offset))
+                           params=params)
         if type(res).__name__ == 'list':
             return [Task(task) for task in res]
         else:
@@ -496,7 +517,7 @@ def delete_task(task_id):
 
 # Task Runs
 
-def get_taskruns(project_id, limit=100, offset=0):
+def get_taskruns(project_id, limit=100, offset=0, last_id=None):
     """Return a list of task runs for a given project ID.
 
     :param project_id: PyBossa Project ID
@@ -505,14 +526,21 @@ def get_taskruns(project_id, limit=100, offset=0):
     :type limit: integer
     :param offset: Offset for the query, default 0
     :type offset: integer
+    :param last_id: id of the last taskrun, used for pagination. If provided, offset is ignored
+    :type last_id: integer
     :rtype: list
     :returns: A list of task runs for the given project ID
 
     """
+    if last_id is not None:
+        params = dict(limit=limit, last_id=last_id)
+    else:
+        params = dict(limit=limit, offset=offset)
+        print OFFSET_WARNING
+    params['project_id'] = project_id
     try:
         res = _pybossa_req('get', 'taskrun',
-                           params=dict(project_id=project_id,
-                                       limit=limit, offset=offset))
+                           params=params)
         if type(res).__name__ == 'list':
             return [TaskRun(taskrun) for taskrun in res]
         else:

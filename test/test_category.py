@@ -22,7 +22,7 @@ from nose.tools import assert_raises
 
 class TestPybossaClientCategory(TestPyBossaClient):
     @patch('pbclient.requests.get')
-    def test_00_get_category_not_found(self, Mock):
+    def test_get_category_not_found(self, Mock):
         """Test get category not found works"""
         # App does not exist should return 404 error object
         not_found = self.create_error_output(action='GET', status_code=404,
@@ -32,7 +32,7 @@ class TestPybossaClientCategory(TestPyBossaClient):
         self.check_error_output(err, not_found)
 
     @patch('pbclient.requests.get')
-    def test_01_get_category_found(self, Mock):
+    def test_get_category_found(self, Mock):
         """Test get category found works"""
         Mock.return_value = self.create_fake_request(self.category, 200)
         category = self.client.get_category(1)
@@ -57,7 +57,7 @@ class TestPybossaClientCategory(TestPyBossaClient):
                 self.check_error_output(err_output, err)
 
     @patch('pbclient.requests.get')
-    def test_01_get_categories(self, Mock):
+    def test_get_categories(self, Mock):
         """Test get_categories works"""
         Mock.return_value = self.create_fake_request([self.category], 200)
         categories = self.client.get_categories()
@@ -72,14 +72,24 @@ class TestPybossaClientCategory(TestPyBossaClient):
         assert len(categories) == 0, categories
 
     @patch('pbclient.requests.get')
-    def test_01_get_categories_error(self, Mock):
+    def test_get_categories_with_keyset_pagination(self, Mock):
+        """Test get_categories uses keyset pagination if a last_id argument is
+        provided"""
+        Mock.return_value = self.create_fake_request([], 200)
+        self.client.get_categories(last_id=1, limit=3)
+
+        Mock.assert_called_once_with('http://localhost:5000/api/category',
+                                     params={'limit': 3,
+                                             'last_id': 1})
+
+    @patch('pbclient.requests.get')
+    def test_get_categories_error(self, Mock):
         """Test get_categories error works"""
         Mock.return_value = self.create_fake_request(self.category, 200)
         assert_raises(TypeError, self.client.get_categories)
 
-
     @patch('pbclient.requests.get')
-    def test_02_find_category(self, Mock):
+    def test_find_category(self, Mock):
         """Test find_category works"""
         Mock.return_value = self.create_fake_request([self.category], 200)
         categories = self.client.find_category(short_name=self.category['short_name'])
@@ -107,14 +117,14 @@ class TestPybossaClientCategory(TestPyBossaClient):
                 self.check_error_output(err_output, err)
 
     @patch('pbclient.requests.get')
-    def test_03_find_category_not_found(self, Mock):
+    def test_find_category_not_found(self, Mock):
         """Test find_category not found works"""
         Mock.return_value = self.create_fake_request([], 200)
         categories = self.client.find_category(short_name="foobar")
         assert len(categories) == 0, categories
 
     @patch('pbclient.requests.post')
-    def test_04_create_category(self, Mock):
+    def test_create_category(self, Mock):
         """Test create_category works"""
         Mock.return_value = self.create_fake_request(self.category, 200)
         category = self.client.create_category(
@@ -124,7 +134,7 @@ class TestPybossaClientCategory(TestPyBossaClient):
         assert category.short_name == self.category['short_name']
 
     @patch('pbclient.requests.post')
-    def test_05_create_category_exists(self, Mock):
+    def test_create_category_exists(self, Mock):
         """Test create_category duplicate entry works"""
         already_exists = self.create_error_output(action='POST', status_code=415,
                                                   target='category', exception_cls='IntegrityError')
@@ -136,7 +146,7 @@ class TestPybossaClientCategory(TestPyBossaClient):
         self.check_error_output(category, already_exists)
 
     @patch('pbclient.requests.post')
-    def test_06_create_category_not_allowed(self, Mock):
+    def test_create_category_not_allowed(self, Mock):
         """Test create_category not authorized works"""
         not_authorized = self.create_error_output(action='POST', status_code=401,
                                                   target='category', exception_cls='Unauthorized')
@@ -148,7 +158,7 @@ class TestPybossaClientCategory(TestPyBossaClient):
         self.check_error_output(category, not_authorized)
 
     @patch('pbclient.requests.post')
-    def test_07_create_category_forbidden(self, Mock):
+    def test_create_category_forbidden(self, Mock):
         """Test create_category not forbidden works"""
         forbidden = self.create_error_output(action='POST', status_code=403,
                                              target='category', exception_cls='Forbidden')
@@ -160,7 +170,7 @@ class TestPybossaClientCategory(TestPyBossaClient):
         self.check_error_output(category, forbidden)
 
     @patch('pbclient.requests.put')
-    def test_08_update_category(self, Mock):
+    def test_update_category(self, Mock):
         """Test update_category works"""
         Mock.return_value = self.create_fake_request(self.category, 200)
         category = self.client.update_category(pbclient.Project(self.category))
@@ -168,7 +178,7 @@ class TestPybossaClientCategory(TestPyBossaClient):
         assert category.short_name == self.category['short_name'], category
 
     @patch('pbclient.requests.put')
-    def test_09_update_category_not_found(self, Mock):
+    def test_update_category_not_found(self, Mock):
         """Test update_category not found works"""
         not_found = self.create_error_output(action='PUT', status_code=404,
                                              target='category', exception_cls='NotFound')
@@ -177,7 +187,7 @@ class TestPybossaClientCategory(TestPyBossaClient):
         self.check_error_output(not_found, err)
 
     @patch('pbclient.requests.put')
-    def test_10_update_category_forbidden(self, Mock):
+    def test_update_category_forbidden(self, Mock):
         """Test update_category forbidden works"""
         forbidden = self.create_error_output(action='PUT', status_code=403,
                                              target='category', exception_cls='Forbidden')
@@ -186,7 +196,7 @@ class TestPybossaClientCategory(TestPyBossaClient):
         self.check_error_output(forbidden, err)
 
     @patch('pbclient.requests.put')
-    def test_11_update_category_unauthorized(self, Mock):
+    def test_update_category_unauthorized(self, Mock):
         """Test update_category unauthorized works"""
         unauthorized = self.create_error_output(action='PUT', status_code=401,
                                                 target='category', exception_cls='Unauthorized')
@@ -195,14 +205,14 @@ class TestPybossaClientCategory(TestPyBossaClient):
         self.check_error_output(unauthorized, err)
 
     @patch('pbclient.requests.delete')
-    def test_12_delete_category(self, Mock):
+    def test_delete_category(self, Mock):
         """Test delete_category works"""
         Mock.return_value = self.create_fake_request('', 204, 'text/html')
         res = self.client.delete_category(1)
         assert res is True, res
 
     @patch('pbclient.requests.delete')
-    def test_13_delete_category(self, Mock):
+    def test_delete_category(self, Mock):
         """Test delete_category error works"""
         Mock.return_value = self.create_fake_request('404', 404, 'text/html')
         res = self.client.delete_category(1)

@@ -52,11 +52,23 @@ class TestPybossaClientTaskRun(TestPyBossaClient):
         assert taskrun.project_id == self.taskrun['project_id'], taskrun
 
     @patch('pbclient.requests.get')
+    def test_get_taskruns_with_keyset_pagination(self, Mock):
+        """Test get_taskruns uses keyset pagination if a last_id argument is
+        provided"""
+        Mock.return_value = self.create_fake_request([], 200)
+        self.client.get_taskruns(1, last_id=1, limit=3)
+
+        Mock.assert_called_once_with('http://localhost:5000/api/taskrun',
+                                     params={'api_key': 'key',
+                                             'project_id': 1,
+                                             'limit': 3,
+                                             'last_id': 1})
+
+    @patch('pbclient.requests.get')
     def test_get_taskruns_error(self, Mock):
         """Test get_taskruns error works"""
         Mock.return_value = self.create_fake_request(self.taskrun, 200)
         assert_raises(TypeError, self.client.get_taskruns, 1)
-
 
     @patch('pbclient.requests.get')
     def test_find_taskruns(self, Mock):
