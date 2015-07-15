@@ -8,7 +8,7 @@ setup(
     # metadata for upload to PyPI
     author='Open Knowledge Foundation Labs',
     # TODO: change
-    author_email='okfnlabs@okfn.org',
+    author_email='teleyinex@gmail.com',
     description='pybossa-client is a tiny Python library makes it easy to work with PyBossa.',
     long_description='''PyBossa is a crowdsourcing framework. This tiny library allows you to interact with it.''',
     license='MIT',
