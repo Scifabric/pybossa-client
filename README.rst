@@ -88,7 +88,7 @@ This approach has the advantage of being more "natural" and high level, but it
 does not use all the power of the PyBossa server software (queries will run
 slower when the pagination and data sets are high).
 
-But you can also use [keyset pagination](http://use-the-index-luke.com/no-offset)
+But you can also use `keyset pagination <http://use-the-index-luke.com/no-offset>`_
 to take advantage of it in the PyBossa API. This drastically increases performance
 of the API queries, so it is **highly recommended** to follow this approach.
 
