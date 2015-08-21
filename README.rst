@@ -10,6 +10,11 @@ Dead simple Python client for PyBossa
 
 Makes it easy to work with `PyBossa <http://pybossa.com>`_
 
+Requirements
+------------
+
+`PyBossa Server <http://pybossa.com>`_ >= 0.2.3.
+
 Install
 -------
 
