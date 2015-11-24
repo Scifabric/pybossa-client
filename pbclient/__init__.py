@@ -608,7 +608,7 @@ def get_results(project_id, limit=100, offset=0, last_id=None):
     :param limit: Number of returned items, default 100
     :type limit: integer
     :param offset: Offset for the query, default 0
-    :param last_id: id of the last task, used for pagination. If provided, offset is ignored
+    :param last_id: id of the last result, used for pagination. If provided, offset is ignored
     :type last_id: integer
     :type offset: integer
     :returns: True -- the response status code
@@ -639,7 +639,7 @@ def find_results(project_id, **kwargs):
     :param kwargs: PyBossa Results members
     :type info: dict
     :rtype: list
-    :returns: A list of tasks that match the kwargs
+    :returns: A list of results that match the kwargs
 
     """
     try:
