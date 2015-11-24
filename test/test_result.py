@@ -39,7 +39,8 @@ class TestPybossaClientResult(TestPyBossaClient):
         self.client.get_results(1, last_id=1, limit=3)
 
         Mock.assert_called_once_with('http://localhost:5000/api/result',
-                                     params={'project_id': 1,
+                                     params={'api_key': 'key',
+                                             'project_id': 1,
                                              'limit': 3,
                                              'last_id': 1})
 
