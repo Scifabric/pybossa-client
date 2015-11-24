@@ -64,6 +64,14 @@ class TestPyBossaClient(object):
                    link="<link rel='self' title='taskrun' href='http://localhost:5000/api/taskrun/1'/>",
                    id=1)
 
+    result = dict(info=dict(foo='bar'),
+                  created='today',
+                  task_id=1,
+                  project_id=1,
+                  task_run_ids=[1],
+                  last_version=True,
+                  id=1)
+
     def setUp(self):
         self.client = pbclient
         self.client.set('endpoint', 'http://localhost:5000')
