@@ -72,22 +72,22 @@ class TestPybossaClientResult(TestPyBossaClient):
         assert result.task_id == self.result['task_id'], result
         assert result.task_run_ids == self.result['task_run_ids'], result
 
-    # @patch('pbclient.requests.get')
-    # def test_find_tasks_errors(self, Mock):
-    #     """Test find task errors works"""
-    #     targets = ['task']
-    #     errors = {'Unauthorized': 401, 'NotFound': 404, 'Forbidden': 401,
-    #               'TypeError': 415}
-    #     for target in targets:
-    #         for error in errors.keys():
-    #             err_output = self.create_error_output(action='GET',
-    #                                                   status_code=errors[error],
-    #                                                   target=target,
-    #                                                   exception_cls=error)
-    #             Mock.return_value = self.create_fake_request(err_output,
-    #                                                          errors[error])
-    #             err = self.client.find_tasks(1)
-    #             self.check_error_output(err_output, err)
+    @patch('pbclient.requests.get')
+    def test_find_results_errors(self, Mock):
+        """Test find results errors works."""
+        targets = ['result']
+        errors = {'Unauthorized': 401, 'NotFound': 404, 'Forbidden': 401,
+                  'TypeError': 415}
+        for target in targets:
+            for error in errors.keys():
+                err_output = self.create_error_output(action='GET',
+                                                      status_code=errors[error],
+                                                      target=target,
+                                                      exception_cls=error)
+                Mock.return_value = self.create_fake_request(err_output,
+                                                             errors[error])
+                err = self.client.find_tasks(1)
+                self.check_error_output(err_output, err)
 
     # @patch('pbclient.requests.post')
     # def test_create_task(self, Mock):
