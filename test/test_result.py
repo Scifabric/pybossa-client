@@ -58,7 +58,7 @@ class TestPybossaClientResult(TestPyBossaClient):
                                                       exception_cls=error)
                 Mock.return_value = self.create_fake_request(err_output,
                                                              errors[error])
-                err = self.client.get_tasks(1)
+                err = self.client.get_results(1)
                 self.check_error_output(err_output, err)
 
     @patch('pbclient.requests.get')
@@ -87,7 +87,7 @@ class TestPybossaClientResult(TestPyBossaClient):
                                                       exception_cls=error)
                 Mock.return_value = self.create_fake_request(err_output,
                                                              errors[error])
-                err = self.client.find_tasks(1)
+                err = self.client.find_results(1)
                 self.check_error_output(err_output, err)
 
     @patch('pbclient.requests.put')
@@ -115,5 +115,5 @@ class TestPybossaClientResult(TestPyBossaClient):
                                                       exception_cls=error)
                 Mock.return_value = self.create_fake_request(err_output,
                                                              errors[error])
-                err = self.client.update_task(pbclient.Task(self.task.copy()))
+                err = self.client.update_result(pbclient.Result(self.result.copy()))
                 self.check_error_output(err_output, err)
