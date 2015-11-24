@@ -134,6 +134,19 @@ class TaskRun(DomainObject):
         return 'pybossa.TaskRun(' + str(self.id) + ')'
 
 
+class Result(DomainObject):
+
+    """Class Result."""
+
+    reserved_keys = dict(id=None, created=None, project_id=None,
+                         task_id=None, task_run_ids=None)
+
+
+    def __repr__(self):  # pragma: no cover
+        """Return representation."""
+        return 'pybossa.Result(' + str(self.id) + ')'
+
+
 # Projects
 
 def get_projects(limit=100, offset=0, last_id=None):
