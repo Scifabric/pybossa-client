@@ -100,19 +100,19 @@ class TestPybossaClientResult(TestPyBossaClient):
         assert result.task_run_ids == self.result['task_run_ids'], result
         assert result.info == self.result['info'], result.info
 
-    # @patch('pbclient.requests.put')
-    # def test_update_task_errors(self, Mock):
-    #     """Test update task errors works"""
-    #     targets = ['task']
-    #     errors = {'Unauthorized': 401, 'NotFound': 404, 'Forbidden': 401,
-    #               'TypeError': 415, 'BadRequest': 400}
-    #     for target in targets:
-    #         for error in errors.keys():
-    #             err_output = self.create_error_output(action='POST',
-    #                                                   status_code=errors[error],
-    #                                                   target=target,
-    #                                                   exception_cls=error)
-    #             Mock.return_value = self.create_fake_request(err_output,
-    #                                                          errors[error])
-    #             err = self.client.update_task(pbclient.Task(self.task.copy()))
-    #             self.check_error_output(err_output, err)
+    @patch('pbclient.requests.put')
+    def test_update_result_errors(self, Mock):
+        """Test update result errors works"""
+        targets = ['result']
+        errors = {'Unauthorized': 401, 'NotFound': 404, 'Forbidden': 401,
+                  'TypeError': 415, 'BadRequest': 400}
+        for target in targets:
+            for error in errors.keys():
+                err_output = self.create_error_output(action='PUT',
+                                                      status_code=errors[error],
+                                                      target=target,
+                                                      exception_cls=error)
+                Mock.return_value = self.create_fake_request(err_output,
+                                                             errors[error])
+                err = self.client.update_task(pbclient.Task(self.task.copy()))
+                self.check_error_output(err_output, err)
