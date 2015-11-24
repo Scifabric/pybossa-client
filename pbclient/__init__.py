@@ -139,7 +139,7 @@ class Result(DomainObject):
     """Class Result."""
 
     reserved_keys = dict(id=None, created=None, project_id=None,
-                         task_id=None, task_run_ids=None)
+                         task_id=None, task_run_ids=None, last_version=None)
 
 
     def __repr__(self):  # pragma: no cover
