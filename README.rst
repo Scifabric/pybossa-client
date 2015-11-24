@@ -13,7 +13,7 @@ Makes it easy to work with `PyBossa <http://pybossa.com>`_
 Requirements
 ------------
 
-`PyBossa Server <http://pybossa.com>`_ >= 0.2.3.
+`PyBossa Server <http://pybossa.com>`_ >= 1.2.0.
 
 Install
 -------
