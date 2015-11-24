@@ -60,15 +60,17 @@ class TestPybossaClientResult(TestPyBossaClient):
                 err = self.client.get_tasks(1)
                 self.check_error_output(err_output, err)
 
-    # @patch('pbclient.requests.get')
-    # def test_find_tasks(self, Mock):
-    #     """Test find_tasks works"""
-    #     Mock.return_value = self.create_fake_request([self.task.copy()], 200)
-    #     res = self.client.find_tasks(project_id=1)
-    #     assert len(res) == 1, len(res)
-    #     task = res[0]
-    #     assert task.id == self.task['id'], task
-    #     assert task.project_id == self.task['project_id'], task
+    @patch('pbclient.requests.get')
+    def test_find_results(self, Mock):
+        """Test find_results works"""
+        Mock.return_value = self.create_fake_request([self.result.copy()], 200)
+        res = self.client.find_results(project_id=1)
+        assert len(res) == 1, len(res)
+        result = res[0]
+        assert result.id == self.result['id'], result
+        assert result.project_id == self.result['project_id'], result
+        assert result.task_id == self.result['task_id'], result
+        assert result.task_run_ids == self.result['task_run_ids'], result
 
     # @patch('pbclient.requests.get')
     # def test_find_tasks_errors(self, Mock):
