@@ -1,5 +1,5 @@
-.. image:: https://travis-ci.org/PyBossa/pybossa-client.png
-   :target: https://travis-ci.org/#!/PyBossa/pybossa-client
+.. image:: https://travis-ci.org/Scifabric/pybossa-client.png
+   :target: https://travis-ci.org/#!/Scifabric/pybossa-client
 .. image:: https://img.shields.io/pypi/v/pybossa-client.svg
    :target: https://pypi.python.org/pypi/pybossa-client
 .. image:: https://img.shields.io/pypi/dm/pybossa-client.svg
