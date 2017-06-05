@@ -3,7 +3,7 @@
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-A simple PyBossa client
+A simple PYBOSSA client
 
 :license: MIT
 """
@@ -16,7 +16,7 @@ import json
 OFFSET_WARNING = """
     INFO: you can use keyset pagination to get faster responses from the server.
     To learn more, please visit:
-    https://github.com/PyBossa/pybossa-client#on-queries-and-performance
+    https://github.com/PYBOSSA/pybossa-client#on-queries-and-performance
     """
 
 
@@ -141,14 +141,23 @@ class Result(DomainObject):
     reserved_keys = dict(id=None, created=None, project_id=None,
                          task_id=None, task_run_ids=None, last_version=None)
 
-
     def __repr__(self):  # pragma: no cover
         """Return representation."""
         return 'pybossa.Result(' + str(self.id) + ')'
 
 
-# Projects
+class HelpingMaterial(DomainObject):
 
+    """Class HelpingMaterial."""
+
+    reserved_keys = dict(id=None, created=None)
+
+    def __repr__(self):  # pragma: no cover
+        """Return representation."""
+        return 'pybossa.HelpingMaterial(' + str(self.id) + ')'
+
+
+# Projects
 def get_projects(limit=100, offset=0, last_id=None):
     """Return a list of registered projects.
 
@@ -159,7 +168,7 @@ def get_projects(limit=100, offset=0, last_id=None):
     :param last_id: id of the last project, used for pagination. If provided, offset is ignored
     :type last_id: integer
     :rtype: list
-    :returns: A list of PyBossa Projects
+    :returns: A list of PYBOSSA Projects
 
     """
     if last_id is not None:
@@ -179,12 +188,12 @@ def get_projects(limit=100, offset=0, last_id=None):
 
 
 def get_project(project_id):
-    """Return a PyBossa Project for the project_id.
+    """Return a PYBOSSA Project for the project_id.
 
-    :param project_id: PyBossa Project ID
+    :param project_id: PYBOSSA Project ID
     :type project_id: integer
-    :rtype: PyBossa Project
-    :returns: A PyBossa Project object
+    :rtype: PYBOSSA Project
+    :returns: A PYBOSSA Project object
 
     """
     try:
@@ -200,7 +209,7 @@ def get_project(project_id):
 def find_project(**kwargs):
     """Return a list with matching project arguments.
 
-    :param kwargs: PyBossa Project members
+    :param kwargs: PYBOSSA Project members
     :rtype: list
     :returns: A list of projects that match the kwargs
 
@@ -218,11 +227,11 @@ def find_project(**kwargs):
 def create_project(name, short_name, description):
     """Create a project.
 
-    :param name: PyBossa Project Name
+    :param name: PYBOSSA Project Name
     :type name: string
-    :param short_name: PyBossa Project short name or slug
+    :param short_name: PYBOSSA Project short name or slug
     :type short_name: string
-    :param description: PyBossa Project description
+    :param description: PYBOSSA Project description
     :type decription: string
     :returns: True -- the response status code
 
@@ -242,8 +251,8 @@ def create_project(name, short_name, description):
 def update_project(project):
     """Update a project instance.
 
-    :param project: PyBossa project
-    :type project: PyBossa Project
+    :param project: PYBOSSA project
+    :type project: PYBOSSA Project
     :returns: True -- the response status code
 
     """
@@ -262,7 +271,7 @@ def update_project(project):
 def delete_project(project_id):
     """Delete a Project with id = project_id.
 
-    :param project_id: PyBossa Project ID
+    :param project_id: PYBOSSA Project ID
     :type project_id: integer
     :returns: True -- the response status code
 
@@ -289,7 +298,7 @@ def get_categories(limit=20, offset=0, last_id=None):
     :param last_id: id of the last category, used for pagination. If provided, offset is ignored
     :type last_id: integer
     :rtype: list
-    :returns: A list of PyBossa Categories
+    :returns: A list of PYBOSSA Categories
 
     """
     if last_id is not None:
@@ -309,12 +318,12 @@ def get_categories(limit=20, offset=0, last_id=None):
 
 
 def get_category(category_id):
-    """Return a PyBossa Category for the category_id.
+    """Return a PYBOSSA Category for the category_id.
 
-    :param category_id: PyBossa Category ID
+    :param category_id: PYBOSSA Category ID
     :type category_id: integer
-    :rtype: PyBossa Category
-    :returns: A PyBossa Category object
+    :rtype: PYBOSSA Category
+    :returns: A PYBOSSA Category object
 
     """
     try:
@@ -330,7 +339,7 @@ def get_category(category_id):
 def find_category(**kwargs):
     """Return a list with matching Category arguments.
 
-    :param kwargs: PyBossa Category members
+    :param kwargs: PYBOSSA Category members
     :rtype: list
     :returns: A list of project that match the kwargs
 
@@ -348,9 +357,9 @@ def find_category(**kwargs):
 def create_category(name, description):
     """Create a Category.
 
-    :param name: PyBossa Category Name
+    :param name: PYBOSSA Category Name
     :type name: string
-    :param description: PyBossa Category description
+    :param description: PYBOSSA Category description
     :type decription: string
     :returns: True -- the response status code
     """
@@ -369,8 +378,8 @@ def create_category(name, description):
 def update_category(category):
     """Update a Category instance.
 
-    :param category: PyBossa Category
-    :type category: PyBossa Category
+    :param category: PYBOSSA Category
+    :type category: PYBOSSA Category
     :returns: True -- the response status code
 
     """
@@ -388,7 +397,7 @@ def update_category(category):
 def delete_category(category_id):
     """Delete a Category with id = category_id.
 
-    :param category_id: PyBossa Category ID
+    :param category_id: PYBOSSA Category ID
     :type category_id: integer
     :returns: True -- the response status code
 
@@ -408,7 +417,7 @@ def delete_category(category_id):
 def get_tasks(project_id, limit=100, offset=0, last_id=None):
     """Return a list of tasks for a given project ID.
 
-    :param project_id: PyBossa Project ID
+    :param project_id: PYBOSSA Project ID
     :type project_id: integer
     :param limit: Number of returned items, default 100
     :type limit: integer
@@ -439,9 +448,9 @@ def get_tasks(project_id, limit=100, offset=0, last_id=None):
 def find_tasks(project_id, **kwargs):
     """Return a list of matched tasks for a given project ID.
 
-    :param project_id: PyBossa Project ID
+    :param project_id: PYBOSSA Project ID
     :type project_id: integer
-    :param kwargs: PyBossa Task members
+    :param kwargs: PYBOSSA Task members
     :type info: dict
     :rtype: list
     :returns: A list of tasks that match the kwargs
@@ -461,9 +470,9 @@ def find_tasks(project_id, **kwargs):
 def create_task(project_id, info, n_answers=30, priority_0=0, quorum=0):
     """Create a task for a given project ID.
 
-    :param project_id: PyBossa Project ID
+    :param project_id: PYBOSSA Project ID
     :type project_id: integer
-    :param info: PyBossa Project info JSON field
+    :param info: PYBOSSA Project info JSON field
     :type info: dict
     :param n_answers: Number of answers or TaskRuns per task, default 30
     :type n_answers: integer
@@ -496,7 +505,7 @@ def create_task(project_id, info, n_answers=30, priority_0=0, quorum=0):
 def update_task(task):
     """Update a task for a given task ID.
 
-    :param task: PyBossa task
+    :param task: PYBOSSA task
 
     """
     try:
@@ -514,7 +523,7 @@ def update_task(task):
 def delete_task(task_id):
     """Delete a task for a given task ID.
 
-    :param task: PyBossa task
+    :param task: PYBOSSA task
 
     """
     #: :arg task: A task
@@ -533,7 +542,7 @@ def delete_task(task_id):
 def get_taskruns(project_id, limit=100, offset=0, last_id=None):
     """Return a list of task runs for a given project ID.
 
-    :param project_id: PyBossa Project ID
+    :param project_id: PYBOSSA Project ID
     :type project_id: integer
     :param limit: Number of returned items, default 100
     :type limit: integer
@@ -565,9 +574,9 @@ def get_taskruns(project_id, limit=100, offset=0, last_id=None):
 def find_taskruns(project_id, **kwargs):
     """Return a list of matched task runs for a given project ID.
 
-    :param project_id: PyBossa Project ID
+    :param project_id: PYBOSSA Project ID
     :type project_id: integer
-    :param kwargs: PyBossa Task Run members
+    :param kwargs: PYBOSSA Task Run members
     :rtype: list
     :returns: A List of task runs that match the query members
 
@@ -586,7 +595,7 @@ def find_taskruns(project_id, **kwargs):
 def delete_taskrun(taskrun_id):
     """Delete the given taskrun.
 
-    :param task: PyBossa task
+    :param task: PYBOSSA task
     """
     try:
         res = _pybossa_req('delete', 'taskrun', taskrun_id)
@@ -603,7 +612,7 @@ def delete_taskrun(taskrun_id):
 def get_results(project_id, limit=100, offset=0, last_id=None):
     """Return a list of results for a given project ID.
 
-    :param project_id: PyBossa Project ID
+    :param project_id: PYBOSSA Project ID
     :type project_id: integer
     :param limit: Number of returned items, default 100
     :type limit: integer
@@ -634,9 +643,9 @@ def get_results(project_id, limit=100, offset=0, last_id=None):
 def find_results(project_id, **kwargs):
     """Return a list of matched results for a given project ID.
 
-    :param project_id: PyBossa Project ID
+    :param project_id: PYBOSSA Project ID
     :type project_id: integer
-    :param kwargs: PyBossa Results members
+    :param kwargs: PYBOSSA Results members
     :type info: dict
     :rtype: list
     :returns: A list of results that match the kwargs
@@ -656,7 +665,7 @@ def find_results(project_id, **kwargs):
 def update_result(result):
     """Update a result for a given result ID.
 
-    :param result: PyBossa result
+    :param result: PYBOSSA result
 
     """
     try:
@@ -678,3 +687,76 @@ def _forbidden_attributes(obj):
             obj.data.pop(key)
     return obj
 
+
+# Helping Material
+
+def get_helping_material(project_id, limit=100, offset=0, last_id=None):
+    """Return a list of helping materials for a given project ID.
+
+    :param project_id: PYBOSSA Project ID
+    :type project_id: integer
+    :param limit: Number of returned items, default 100
+    :type limit: integer
+    :param offset: Offset for the query, default 0
+    :param last_id: id of the last helping material, used for pagination. If provided, offset is ignored
+    :type last_id: integer
+    :type offset: integer
+    :returns: True -- the response status code
+
+    """
+    if last_id is not None:
+        params = dict(limit=limit, last_id=last_id)
+    else:
+        params = dict(limit=limit, offset=offset)
+        print OFFSET_WARNING
+    params['project_id'] = project_id
+    try:
+        res = _pybossa_req('get', 'helpingmaterial',
+                           params=params)
+        if type(res).__name__ == 'list':
+            return [HelpingMaterial(helping) for helping in res]
+        else:
+            return res
+    except:  # pragma: no cover
+        raise
+
+
+def find_helpingmaterial(project_id, **kwargs):
+    """Return a list of matched helping materials for a given project ID.
+
+    :param project_id: PYBOSSA Project ID
+    :type project_id: integer
+    :param kwargs: PYBOSSA HelpingMaterial members
+    :type info: dict
+    :rtype: list
+    :returns: A list of helping materials that match the kwargs
+
+    """
+    try:
+        kwargs['project_id'] = project_id
+        res = _pybossa_req('get', 'helpingmaterial', params=kwargs)
+        if type(res).__name__ == 'list':
+            return [HelpingMaterial(helping) for helping in res]
+        else:
+            return res
+    except:  # pragma: no cover
+        raise
+
+
+def update_helpingmaterial(helpingmaterial):
+    """Update a helping material for a given helping material ID.
+
+    :param helpingmaterial: PYBOSSA helping material
+
+    """
+    try:
+        helpingmaterial_id = helpingmaterial.id
+        helpingmaterial = _forbidden_attributes(helpingmaterial)
+        res = _pybossa_req('put', 'helpingmaterial',
+                           helpingmaterial_id, payload=helpingmaterial.data)
+        if res.get('id'):
+            return HelpingMaterial(res)
+        else:
+            return res
+    except:  # pragma: no cover
+        raise
