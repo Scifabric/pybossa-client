@@ -80,7 +80,8 @@ class TestPybossaClientCategory(TestPyBossaClient):
 
         Mock.assert_called_once_with('http://localhost:5000/api/category',
                                      params={'limit': 3,
-                                             'last_id': 1})
+                                             'last_id': 1,
+                                             'api_key': 'tester'})
 
     @patch('pbclient.requests.get')
     def test_get_categories_error(self, Mock):
