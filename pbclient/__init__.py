@@ -47,13 +47,10 @@ def _pybossa_req(method, domain, id=None, payload=None, params={},
             r = requests.post(url, params=params, headers=headers,
                               data=json.dumps(payload))
         else:
-            r = requests.post(url, params=params, files=files)
+            r = requests.post(url, params=params, files=files, data=payload)
     elif method == 'put':
-        if files is None and headers['content-type'] == 'application/json':
-            r = requests.put(url, params=params, headers=headers,
-                             data=json.dumps(payload))
-        else:
-            r = requests.put(url, params=params, files=files)
+        r = requests.put(url, params=params, headers=headers,
+                         data=json.dumps(payload))
     elif method == 'delete':
         r = requests.delete(url, params=params, headers=headers,
                             data=json.dumps(payload))
