@@ -81,7 +81,7 @@ class TestPyBossaClient(object):
     def setUp(self):
         self.client = pbclient
         self.client.set('endpoint', 'http://localhost:5000')
-        self.client.set('api-key', 'tester')
+        self.client.set('api_key', 'tester')
 
     def create_fake_request(self, data, status=None, mimetype={'content-type': 'application/json'}):
         if status is None and data['status_code']:
