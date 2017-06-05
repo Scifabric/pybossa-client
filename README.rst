@@ -5,15 +5,15 @@
 .. image:: https://img.shields.io/pypi/dm/pybossa-client.svg
    :target: https://pypi.python.org/pypi/pybossa-client
 
-Dead simple Python client for PyBossa
+Dead simple Python client for PYBOSSA
 =====================================
 
-Makes it easy to work with `PyBossa <http://pybossa.com>`_
+Makes it easy to work with `PYBOSSA <http://pybossa.com>`_
 
 Requirements
 ------------
 
-`PyBossa Server <http://pybossa.com>`_ >= 1.2.0.
+`PYBOSSA Server <http://pybossa.com>`_ >= 1.2.0.
 
 Install
 -------
@@ -34,7 +34,7 @@ Setup::
     >>> pbclient.set('endpoint', 'http://pybossa.com')
     >>> pbclient.set('api_key', '--your-api-key-here--')
 
-Query a PyBossa server::
+Query a PYBOSSA server::
 
     >>> pbclient.get_projects()
 
@@ -75,6 +75,23 @@ Create a new task::
     }
     >>> pbclient.create_task(project_id, task_info)
 
+Create a new helping material::
+
+    >>> helping_info = {
+        'key': 'value'
+    }
+    >>> pbclient.create_task(project_id, helping_info)
+
+    >>> helping_info = {
+        'project_id': project_id
+    }
+    >>> files: {'file': open('/tmp/img.jpg', 'rb')}
+    >>> hm = pbclient.create_helpingmaterial(project_id, helping_info, files=files)
+    >>> print hm.media_url
+    /uploads/container/img.jpg
+    >>> hm.info['key'] = 'value'
+    >>> pbclient.update_helpingmaterial(hm)
+
 **Note**: Categories actions POST, PUT and DELETE are only authorized to
 admin users.
 
@@ -90,11 +107,11 @@ The first one is to use an offset and limit::
     [pybossa.Project("project3", 3), pybossa.Project("project4", 4)]
 
 This approach has the advantage of being more "natural" and high level, but it
-does not use all the power of the PyBossa server software (queries will run
+does not use all the power of the PYBOSSA server software (queries will run
 slower when the pagination and data sets are high).
 
 But you can also use `keyset pagination <http://use-the-index-luke.com/no-offset>`_
-to take advantage of it in the PyBossa API. This drastically increases performance
+to take advantage of it in the PYBOSSA API. This drastically increases performance
 of the API queries, so it is **highly recommended** to follow this approach.
 
 The only thing it requires is the id of the item from which we want to obtain the

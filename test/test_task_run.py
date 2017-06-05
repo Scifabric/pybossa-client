@@ -59,7 +59,7 @@ class TestPybossaClientTaskRun(TestPyBossaClient):
         self.client.get_taskruns(1, last_id=1, limit=3)
 
         Mock.assert_called_once_with('http://localhost:5000/api/taskrun',
-                                     params={'api_key': 'key',
+                                     params={'api_key': 'tester',
                                              'project_id': 1,
                                              'limit': 3,
                                              'last_id': 1})
