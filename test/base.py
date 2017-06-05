@@ -75,7 +75,8 @@ class TestPyBossaClient(object):
     helpingmaterial = dict(info=dict(key='value'),
                            created='today',
                            project_id=1,
-                           medial_url='/container/image.jpg')
+                           media_url='/container/image.jpg',
+                           id=1)
 
 
     def setUp(self):

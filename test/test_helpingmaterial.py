@@ -60,17 +60,17 @@ class TestPybossaClientHelpingMaterial(TestPyBossaClient):
                 err = self.client.get_results(1)
                 self.check_error_output(err_output, err)
 
-    #@patch('pbclient.requests.get')
-    #def test_find_results(self, Mock):
-    #    """Test find_results works"""
-    #    Mock.return_value = self.create_fake_request([self.result.copy()], 200)
-    #    res = self.client.find_results(project_id=1)
-    #    assert len(res) == 1, len(res)
-    #    result = res[0]
-    #    assert result.id == self.result['id'], result
-    #    assert result.project_id == self.result['project_id'], result
-    #    assert result.task_id == self.result['task_id'], result
-    #    assert result.task_run_ids == self.result['task_run_ids'], result
+    @patch('pbclient.requests.get')
+    def test_find_helping_materials(self, Mock):
+        """Test find_helpingmaterials works"""
+        Mock.return_value = self.create_fake_request([self.helpingmaterial.copy()], 200)
+        res = self.client.find_helpingmaterials(project_id=1)
+        assert len(res) == 1, len(res)
+        helping = res[0]
+        assert helping.id == self.helpingmaterial['id'], helping
+        assert helping.project_id == self.helpingmaterial['project_id'], helping
+        assert helping.info == self.helpingmaterial['info'], helping
+        assert helping.media_url == self.helpingmaterial['media_url'], helping
 
     #@patch('pbclient.requests.get')
     #def test_find_results_errors(self, Mock):
