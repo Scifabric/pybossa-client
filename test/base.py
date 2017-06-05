@@ -72,11 +72,11 @@ class TestPyBossaClient(object):
                   last_version=True,
                   id=1)
 
-    helpingmaterial = dict(info=dict(key='value'),
-                           created='today',
-                           project_id=1,
-                           media_url='/container/image.jpg',
-                           id=1)
+    helping_material = dict(info=dict(key='value'),
+                            created='today',
+                            project_id=1,
+                            media_url='/container/image.jpg',
+                            id=1)
 
 
     def setUp(self):

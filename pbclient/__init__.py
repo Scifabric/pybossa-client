@@ -760,7 +760,7 @@ def get_helping_materials(project_id, limit=100, offset=0, last_id=None):
         raise
 
 
-def find_helpingmaterials(project_id, **kwargs):
+def find_helping_materials(project_id, **kwargs):
     """Return a list of matched helping materials for a given project ID.
 
     :param project_id: PYBOSSA Project ID
@@ -782,7 +782,7 @@ def find_helpingmaterials(project_id, **kwargs):
         raise
 
 
-def update_helpingmaterial(helpingmaterial):
+def update_helping_material(helpingmaterial):
     """Update a helping material for a given helping material ID.
 
     :param helpingmaterial: PYBOSSA helping material

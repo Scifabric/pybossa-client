@@ -22,17 +22,17 @@ from base import TestPyBossaClient
 class TestPybossaClientHelpingMaterial(TestPyBossaClient):
 
     @patch('pbclient.requests.get')
-    def test_get_helpingmaterial(self, Mock):
+    def test_get_helping_material(self, Mock):
         """Test get_helping_materials works."""
-        Mock.return_value = self.create_fake_request([self.helpingmaterial.copy()], 200)
+        Mock.return_value = self.create_fake_request([self.helping_material.copy()], 200)
         res = self.client.get_helping_materials(1)
         assert len(res) == 1, len(res)
         hm = res[0]
         assert hm.project_id == self.project['id'], hm
 
     @patch('pbclient.requests.get')
-    def test_get_helpingmaterials_with_keyset_pagination(self, Mock):
-        """Test get_helpingmaterials uses keyset pagination if a last_id argument is
+    def test_get_helping_materials_with_keyset_pagination(self, Mock):
+        """Test get_helping_materials uses keyset pagination if a last_id argument is
         provided"""
         Mock.return_value = self.create_fake_request([], 200)
         self.client.get_helping_materials(1, last_id=1, limit=3)
@@ -57,62 +57,60 @@ class TestPybossaClientHelpingMaterial(TestPyBossaClient):
                                                       exception_cls=error)
                 Mock.return_value = self.create_fake_request(err_output,
                                                              errors[error])
-                err = self.client.get_results(1)
+                err = self.client.get_helping_materials(1)
                 self.check_error_output(err_output, err)
 
     @patch('pbclient.requests.get')
     def test_find_helping_materials(self, Mock):
-        """Test find_helpingmaterials works"""
-        Mock.return_value = self.create_fake_request([self.helpingmaterial.copy()], 200)
-        res = self.client.find_helpingmaterials(project_id=1)
+        """Test find_helping_materials works"""
+        Mock.return_value = self.create_fake_request([self.helping_material.copy()], 200)
+        res = self.client.find_helping_materials(project_id=1)
         assert len(res) == 1, len(res)
         helping = res[0]
-        assert helping.id == self.helpingmaterial['id'], helping
-        assert helping.project_id == self.helpingmaterial['project_id'], helping
-        assert helping.info == self.helpingmaterial['info'], helping
-        assert helping.media_url == self.helpingmaterial['media_url'], helping
+        assert helping.id == self.helping_material['id'], helping
+        assert helping.project_id == self.helping_material['project_id'], helping
+        assert helping.info == self.helping_material['info'], helping
+        assert helping.media_url == self.helping_material['media_url'], helping
 
-    #@patch('pbclient.requests.get')
-    #def test_find_results_errors(self, Mock):
-    #    """Test find results errors works."""
-    #    targets = ['result']
-    #    errors = {'Unauthorized': 401, 'NotFound': 404, 'Forbidden': 401,
-    #              'TypeError': 415}
-    #    for target in targets:
-    #        for error in errors.keys():
-    #            err_output = self.create_error_output(action='GET',
-    #                                                  status_code=errors[error],
-    #                                                  target=target,
-    #                                                  exception_cls=error)
-    #            Mock.return_value = self.create_fake_request(err_output,
-    #                                                         errors[error])
-    #            err = self.client.find_results(1)
-    #            self.check_error_output(err_output, err)
+    @patch('pbclient.requests.get')
+    def test_find_helping_materials_errors(self, Mock):
+        """Test find helping materials errors works."""
+        targets = ['helpingmaterial']
+        errors = {'Unauthorized': 401, 'NotFound': 404, 'Forbidden': 401,
+                  'TypeError': 415}
+        for target in targets:
+            for error in errors.keys():
+                err_output = self.create_error_output(action='GET',
+                                                      status_code=errors[error],
+                                                      target=target,
+                                                      exception_cls=error)
+                Mock.return_value = self.create_fake_request(err_output,
+                                                             errors[error])
+                err = self.client.find_helping_materials(1)
+                self.check_error_output(err_output, err)
 
-    #@patch('pbclient.requests.put')
-    #def test_update_result(self, Mock):
-    #    """Test update_result works"""
-    #    Mock.return_value = self.create_fake_request(self.result, 200)
-    #    result = self.client.update_result(pbclient.Result(self.result.copy()))
-    #    assert result.id == self.result['id'], result
-    #    assert result.project_id == self.result['project_id'], result
-    #    assert result.task_id == self.result['task_id'], result
-    #    assert result.task_run_ids == self.result['task_run_ids'], result
-    #    assert result.info == self.result['info'], result.info
+    @patch('pbclient.requests.put')
+    def test_update_helping_material(self, Mock):
+        """Test update_helping_material works"""
+        Mock.return_value = self.create_fake_request(self.helping_material, 200)
+        helping = self.client.update_helping_material(pbclient.Result(self.helping_material.copy()))
+        assert helping.id == self.helping_material['id'], helping
+        assert helping.project_id == self.helping_material['project_id'], helping
+        assert helping.info == self.helping_material['info'], helping.info
 
-    #@patch('pbclient.requests.put')
-    #def test_update_result_errors(self, Mock):
-    #    """Test update result errors works"""
-    #    targets = ['result']
-    #    errors = {'Unauthorized': 401, 'NotFound': 404, 'Forbidden': 401,
-    #              'TypeError': 415, 'BadRequest': 400}
-    #    for target in targets:
-    #        for error in errors.keys():
-    #            err_output = self.create_error_output(action='PUT',
-    #                                                  status_code=errors[error],
-    #                                                  target=target,
-    #                                                  exception_cls=error)
-    #            Mock.return_value = self.create_fake_request(err_output,
-    #                                                         errors[error])
-    #            err = self.client.update_result(pbclient.Result(self.result.copy()))
-    #            self.check_error_output(err_output, err)
+    @patch('pbclient.requests.put')
+    def test_update_helping_material_errors(self, Mock):
+        """Test update helping_material errors works"""
+        targets = ['helpingmaterial']
+        errors = {'Unauthorized': 401, 'NotFound': 404, 'Forbidden': 401,
+                  'TypeError': 415, 'BadRequest': 400}
+        for target in targets:
+            for error in errors.keys():
+                err_output = self.create_error_output(action='PUT',
+                                                      status_code=errors[error],
+                                                      target=target,
+                                                      exception_cls=error)
+                Mock.return_value = self.create_fake_request(err_output,
+                                                             errors[error])
+                err = self.client.update_helping_material(pbclient.Result(self.helping_material.copy()))
+                self.check_error_output(err_output, err)
