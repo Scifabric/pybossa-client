@@ -26,14 +26,15 @@ def set(key, val):
     _opts[key] = val
 
 
-def _pybossa_req(method, domain, id=None, payload=None, params={}):
+def _pybossa_req(method, domain, id=None, payload=None, params={},
+                 headers={'content-type': 'application/json'},
+                 files=None):
     """
     Send a JSON request.
 
     Returns True if everything went well, otherwise it returns the status
     code of the response.
     """
-    headers = {'content-type': 'application/json'}
     url = _opts['endpoint'] + '/api/' + domain
     if id is not None:
         url += '/' + str(id)
@@ -42,11 +43,17 @@ def _pybossa_req(method, domain, id=None, payload=None, params={}):
     if method == 'get':
         r = requests.get(url, params=params)
     elif method == 'post':
-        r = requests.post(url, params=params, headers=headers,
-                          data=json.dumps(payload))
+        if files is None and headers['content-type'] == 'application/json':
+            r = requests.post(url, params=params, headers=headers,
+                              data=json.dumps(payload))
+        else:
+            r = requests.post(url, params=params, files=files)
     elif method == 'put':
-        r = requests.put(url, params=params, headers=headers,
-                         data=json.dumps(payload))
+        if files is None and headers['content-type'] == 'application/json':
+            r = requests.put(url, params=params, headers=headers,
+                             data=json.dumps(payload))
+        else:
+            r = requests.put(url, params=params, files=files)
     elif method == 'delete':
         r = requests.delete(url, params=params, headers=headers,
                             data=json.dumps(payload))
