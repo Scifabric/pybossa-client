@@ -729,7 +729,7 @@ def create_helpingmaterial(project_id, info, media_url=None, file_path=None):
         raise
 
 
-def get_helping_material(project_id, limit=100, offset=0, last_id=None):
+def get_helping_materials(project_id, limit=100, offset=0, last_id=None):
     """Return a list of helping materials for a given project ID.
 
     :param project_id: PYBOSSA Project ID

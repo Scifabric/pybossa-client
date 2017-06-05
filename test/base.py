@@ -72,6 +72,12 @@ class TestPyBossaClient(object):
                   last_version=True,
                   id=1)
 
+    helpingmaterial = dict(info=dict(key='value'),
+                           created='today',
+                           project_id=1,
+                           medial_url='/container/image.jpg')
+
+
     def setUp(self):
         self.client = pbclient
         self.client.set('endpoint', 'http://localhost:5000')
