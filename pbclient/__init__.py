@@ -97,7 +97,8 @@ class Project(DomainObject):
     """Project class."""
 
     reserved_keys = dict(id=None, created=None, updated=None,
-                         completed=None, contacted=None, published=None)
+                         completed=None, contacted=None, published=None,
+                         secret_key=None)
 
     def __repr__(self):  # pragma: no cover
         """Return a representation."""
