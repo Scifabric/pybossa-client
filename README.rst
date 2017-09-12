@@ -4,6 +4,13 @@
    :target: https://pypi.python.org/pypi/pybossa-client
 .. image:: https://img.shields.io/pypi/dm/pybossa-client.svg
    :target: https://pypi.python.org/pypi/pybossa-client
+.. image:: https://img.shields.io/badge/python-2.7-green.svg
+   :target: https://pypi.python.org/pypi/pybossa-client
+.. image:: https://img.shields.io/badge/python-3.5-blue.svg
+   :target: https://pypi.python.org/pypi/pybossa-client
+.. image:: https://img.shields.io/badge/python-3.6-orange.svg
+   :target: https://pypi.python.org/pypi/pybossa-client
+
 
 Dead simple Python client for PYBOSSA
 =====================================
