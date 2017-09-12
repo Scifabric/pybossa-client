@@ -15,3 +15,7 @@ pybossa_client.egg-info/
 
 .noseids
 
+.coverage
+.ropeproject/
+env3
+
