@@ -179,7 +179,7 @@ def get_projects(limit=100, offset=0, last_id=None):
     if last_id is not None:
         params = dict(limit=limit, last_id=last_id)
     else:
-        print OFFSET_WARNING
+        print(OFFSET_WARNING)
         params = dict(limit=limit, offset=offset)
     try:
         res = _pybossa_req('get', 'project',
@@ -310,7 +310,7 @@ def get_categories(limit=20, offset=0, last_id=None):
         params = dict(limit=limit, last_id=last_id)
     else:
         params = dict(limit=limit, offset=offset)
-        print OFFSET_WARNING
+        print(OFFSET_WARNING)
     try:
         res = _pybossa_req('get', 'category',
                            params=params)
@@ -437,7 +437,7 @@ def get_tasks(project_id, limit=100, offset=0, last_id=None):
         params = dict(limit=limit, last_id=last_id)
     else:
         params = dict(limit=limit, offset=offset)
-        print OFFSET_WARNING
+        print(OFFSET_WARNING)
     params['project_id'] = project_id
     try:
         res = _pybossa_req('get', 'task',
@@ -563,7 +563,7 @@ def get_taskruns(project_id, limit=100, offset=0, last_id=None):
         params = dict(limit=limit, last_id=last_id)
     else:
         params = dict(limit=limit, offset=offset)
-        print OFFSET_WARNING
+        print(OFFSET_WARNING)
     params['project_id'] = project_id
     try:
         res = _pybossa_req('get', 'taskrun',
@@ -632,7 +632,7 @@ def get_results(project_id, limit=100, offset=0, last_id=None):
         params = dict(limit=limit, last_id=last_id)
     else:
         params = dict(limit=limit, offset=offset)
-        print OFFSET_WARNING
+        print(OFFSET_WARNING)
     params['project_id'] = project_id
     try:
         res = _pybossa_req('get', 'result',
@@ -687,8 +687,8 @@ def update_result(result):
 
 def _forbidden_attributes(obj):
     """Return the object without the forbidden attributes."""
-    for key in obj.data.keys():
-        if key in obj.reserved_keys.keys():
+    for key in list(obj.data.keys()):
+        if key in list(obj.reserved_keys.keys()):
             obj.data.pop(key)
     return obj
 
@@ -748,7 +748,7 @@ def get_helping_materials(project_id, limit=100, offset=0, last_id=None):
         params = dict(limit=limit, last_id=last_id)
     else:
         params = dict(limit=limit, offset=offset)
-        print OFFSET_WARNING
+        print(OFFSET_WARNING)
     params['project_id'] = project_id
     try:
         res = _pybossa_req('get', 'helpingmaterial',
