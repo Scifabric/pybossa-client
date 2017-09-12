@@ -8,10 +8,13 @@ A simple PYBOSSA client
 :license: MIT
 """
 
-_opts = dict()
-
+from __future__ import division
 import requests
 import json
+
+
+_opts = dict()
+
 
 OFFSET_WARNING = """
     INFO: you can use keyset pagination to get faster responses from the server.
@@ -54,7 +57,7 @@ def _pybossa_req(method, domain, id=None, payload=None, params={},
     elif method == 'delete':
         r = requests.delete(url, params=params, headers=headers,
                             data=json.dumps(payload))
-    if r.status_code / 100 == 2:
+    if r.status_code // 100 == 2:
         if r.text and r.text != '""':
             return json.loads(r.text)
         else:
