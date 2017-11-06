@@ -124,7 +124,8 @@ class Task(DomainObject):
 
     """Task Class."""
 
-    reserved_keys = dict(id=None, created=None, state=None)
+    reserved_keys = dict(id=None, created=None, state=None,
+                         fav_user_ids=None)
 
     def __repr__(self):  # pragma: no cover
         """Return a represenation."""
