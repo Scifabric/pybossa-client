@@ -8,7 +8,7 @@ A simple PYBOSSA client
 :license: MIT
 """
 
-from __future__ import division
+
 import requests
 import json
 
