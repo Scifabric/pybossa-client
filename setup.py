@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='pybossa-client',
-    version='2.0.1',
+    version='3.0.0',
     packages=find_packages(),
     install_requires=['requests>=0.13.0'],
     # metadata for upload to PyPI
